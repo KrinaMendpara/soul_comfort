@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "61284782026",
+    "project_id": "soul-comfort-3d60a",
+    "storage_bucket": "soul-comfort-3d60a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61284782026:android:16d0c3693d1c5f91b04933",
+        "android_client_info": {
+          "package_name": "com.example.soul_comfort.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhGBaXD2KLcc5mKCJCG1x-Hx8BHVGp3HE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
