@@ -3,12 +3,13 @@ import 'package:soul_comfort/app_const/colors.dart';
 
 
 class Indicator extends StatelessWidget {
-  const Indicator({super.key});
+  const Indicator({this.color, super.key});
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    return const CircularProgressIndicator(
-        color: greenColor,
+    return CircularProgressIndicator(
+        color: color ?? greenColor,
         strokeCap: StrokeCap.round,
     );
   }

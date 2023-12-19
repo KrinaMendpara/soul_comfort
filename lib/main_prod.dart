@@ -1,6 +1,6 @@
-import 'flavors.dart';
+import 'package:soul_comfort/flavors.dart';
 
-import 'main.dart' as runner;
+import 'package:soul_comfort/main.dart' as runner;
 
 Future<void> main() async {
   F.appFlavor = Flavor.prod;

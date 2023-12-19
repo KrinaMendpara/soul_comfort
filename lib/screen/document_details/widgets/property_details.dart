@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
 import 'package:soul_comfort/common_widgets/details_text.dart';
 import 'package:soul_comfort/generated/l10n.dart';
@@ -33,7 +34,7 @@ class PropertyDetails extends StatelessWidget {
                 .doc(currentUser.phoneNumber)
                 .collection('document')
                 .doc('document')
-                .collection(localization.property)
+                .collection('property')
                 .snapshots()
             : FirebaseFirestore.instance
                 .collection('users')
@@ -44,49 +45,54 @@ class PropertyDetails extends StatelessWidget {
                 .doc(id)
                 .collection('document')
                 .doc('document')
-                .collection(localization.property)
+                .collection('property')
                 .snapshots(),
         builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data = snapshot.data?.docs[index].data();
-                    final property = Property.fromJson(data!);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data?.docs[index].data();
+                final property = Property.fromJson(data!);
 
-                    print(data);
-                    print(property);
-                    print(property.residentName);
-
-                    return Column(
-                      children: [
-                        DetailsText(
-                          name: localization.residentName,
-                          value: property.residentName!,
-                        ),
-                        DetailsText(
-                          name: localization.residentAddress,
-                          value: property.residentAddress!,
-                        ),
-                        DetailsText(
-                          name: localization.notes,
-                          value: property.notes!,
-                        ),
-                        DetailsImageList(
-                          itemCount: property.images!.length,
-                          image: property.images![index],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Divider(),
-                        ),
-                      ],
-                    );
-                  },
+                return Column(
+                  children: [
+                    DetailsText(
+                      name: localization.propertyName,
+                      value: property.propertyName!,
+                    ),
+                    DetailsText(
+                      name: localization.propertyAddress,
+                      value: property.propertyAddress!,
+                    ),
+                    if (property.notes!.isNotEmpty)
+                      DetailsText(
+                        name: localization.notes,
+                        value: property.notes!,
+                      )
+                    else
+                      const SizedBox(),
+                    DetailsImageList(
+                      imageList: property.images ?? [],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        color: blackColor,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 );
+              },
+            );
+          } else {
+            return const Text('No Property data');
+          }
         },
       ),
     );

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -106,101 +105,93 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                       .doc(id)
                       .collection('document')
                       .doc('document')
+                      // .collection('Bond')
                       .snapshots(),
               builder: (context, snapshot) {
-                print(snapshot);
-                print(snapshot.data);
-                print(snapshot.data!.id.length);
-                return (snapshot.connectionState == ConnectionState.waiting)
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasData) {
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 10,
+                    ),
+                    itemCount: documentName.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (ctx, index) {
+                      final data = snapshot.data!;
+                      // print(data);
+                      // print('--------------------');
+                      return Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10,),
-                        itemCount: documentName.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                          horizontal: 15,
+                          vertical: 10,
                         ),
-                        itemBuilder: (ctx, index) {
-                          print(snapshot.data!.reference
-                              .collection(documentName[index]),);
-                          print(snapshot.data!.reference
-                              .collection(documentName[index])
-                              .doc(),);
-                          final data = snapshot.data!.reference
-                              .collection(documentName[index])
-                              .doc();
-
-                          print('------------------------');
-                          print(data.snapshots());
-                          print(data.snapshots().length);
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
-                            child: Container(
-                              // height: 150,
-                              // width: 150,
-                              padding: const EdgeInsets.only(top: 15),
-                              decoration: BoxDecoration(
-                                color: cloudyGreyColor,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: blackColor.withOpacity(0.25),
-                                    offset: const Offset(0, 4),
-                                    blurRadius: 4,
+                        child: Container(
+                          // height: 150,
+                          // width: 150,
+                          padding: const EdgeInsets.only(top: 15),
+                          decoration: BoxDecoration(
+                            color: cloudyGreyColor,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: blackColor.withOpacity(0.25),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocumentDetails(
+                                    id: widget.id,
+                                    image: widget.image,
+                                    name: widget.name,
+                                    email: widget.email,
+                                    title: documentName[index],
+                                    index: index,
+                                    firstProfile: widget.firstProfile,
                                   ),
-                                ],
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DocumentDetails(
-                                        id: widget.id,
-                                        image: widget.image,
-                                        name: widget.name,
-                                        email: widget.email,
-                                        title: documentName[index],
-                                        index: index,
-                                        firstProfile: widget.firstProfile,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Image.asset(
-                                      documentImage[index],
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.fill,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 10),
-                                      child: Text(
-                                        documentName[index],
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Image.asset(
+                                  documentImage[index],
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.fill,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    documentName[index],
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       );
+                    },
+                  );
+                } else {
+                  return const SizedBox();
+                }
               },
             ),
             const SizedBox(

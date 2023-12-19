@@ -57,10 +57,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Enter mobile number`
+  /// `Enter Mobile Number`
   String get enterMobileNumber {
     return Intl.message(
-      'Enter mobile number',
+      'Enter Mobile Number',
       name: 'enterMobileNumber',
       desc: '',
       args: [],
@@ -107,11 +107,11 @@ class AppLocalizations {
     );
   }
 
-  /// `Verification Has Been Sent To`
-  String get verificationHasBeenSentTo {
+  /// `OTP has been sent for verification`
+  String get otpHasBeenSentForVerification {
     return Intl.message(
-      'Verification Has Been Sent To',
-      name: 'verificationHasBeenSentTo',
+      'OTP has been sent for verification',
+      name: 'otpHasBeenSentForVerification',
       desc: '',
       args: [],
     );
@@ -377,11 +377,11 @@ class AppLocalizations {
     );
   }
 
-  /// `Account Name`
-  String get accountName {
+  /// `Account Type`
+  String get accountType {
     return Intl.message(
-      'Account Name',
-      name: 'accountName',
+      'Account Type',
+      name: 'accountType',
       desc: '',
       args: [],
     );
@@ -487,21 +487,21 @@ class AppLocalizations {
     );
   }
 
-  /// `Resident Name`
-  String get residentName {
+  /// `Property Name`
+  String get propertyName {
     return Intl.message(
-      'Resident Name',
-      name: 'residentName',
+      'Property Name',
+      name: 'propertyName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Resident Address`
-  String get residentAddress {
+  /// `Property Address`
+  String get propertyAddress {
     return Intl.message(
-      'Resident Address',
-      name: 'residentAddress',
+      'Property Address',
+      name: 'propertyAddress',
       desc: '',
       args: [],
     );
@@ -677,11 +677,11 @@ class AppLocalizations {
     );
   }
 
-  /// `Please enter some text with use the @ char.`
-  String get pleaseEnterSomeTextWithUseTheChar {
+  /// `Invalid Email`
+  String get invalidEmail {
     return Intl.message(
-      'Please enter some text with use the @ char.',
-      name: 'pleaseEnterSomeTextWithUseTheChar',
+      'Invalid Email',
+      name: 'invalidEmail',
       desc: '',
       args: [],
     );
@@ -707,11 +707,31 @@ class AppLocalizations {
     );
   }
 
-  /// `Phone Number Must Be Of 10 Digit`
-  String get phoneNumberMustBeOf10Digit {
+  /// `Phone number should be 10 digits`
+  String get phoneNumberShouldBeOf10Digit {
     return Intl.message(
-      'Phone Number Must Be Of 10 Digit',
-      name: 'phoneNumberMustBeOf10Digit',
+      'Phone number should be 10 digits',
+      name: 'phoneNumberShouldBeOf10Digit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank account number should be 8 digits`
+  String get bankAccountNumberShouldBe8Digits {
+    return Intl.message(
+      'Bank account number should be 8 digits',
+      name: 'bankAccountNumberShouldBe8Digits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `IFSC code should be 10 digits`
+  String get ifscCodeShouldBe10Digits {
+    return Intl.message(
+      'IFSC code should be 10 digits',
+      name: 'ifscCodeShouldBe10Digits',
       desc: '',
       args: [],
     );

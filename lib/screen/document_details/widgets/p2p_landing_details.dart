@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
 import 'package:soul_comfort/common_widgets/details_text.dart';
 import 'package:soul_comfort/generated/l10n.dart';
@@ -32,7 +33,7 @@ class P2PLandingDetails extends StatelessWidget {
                 .doc(currentUser.phoneNumber)
                 .collection('document')
                 .doc('document')
-                .collection(localization.p2PLanding)
+                .collection('p2P landing')
                 .snapshots()
             : FirebaseFirestore.instance
                 .collection('users')
@@ -43,44 +44,53 @@ class P2PLandingDetails extends StatelessWidget {
                 .doc(id)
                 .collection('document')
                 .doc('document')
-                .collection(localization.p2PLanding)
+                .collection('p2P landing')
                 .snapshots(),
         builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data = snapshot.data!.docs[index].data();
-                    final p2pLanding = P2PLanding.fromJson(data);
-                    return Column(
-                      children: [
-                        DetailsText(
-                          name: localization.name,
-                          value: p2pLanding.p2PLanding!,
-                        ),
-                        DetailsText(
-                          name: localization.other,
-                          value: p2pLanding.others!,
-                        ),
-                        DetailsText(
-                          name: localization.notes,
-                          value: p2pLanding.notes!,
-                        ),
-                        DetailsImageList(
-                          itemCount: p2pLanding.images!.length,
-                          image: p2pLanding.images![index],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Divider(),
-                        ),
-                      ],
-                    );
-                  },
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data!.docs[index].data();
+                final p2pLanding = P2PLanding.fromJson(data);
+                return Column(
+                  children: [
+                    DetailsText(
+                      name: localization.name,
+                      value: p2pLanding.p2PLanding!,
+                    ),
+                    DetailsText(
+                      name: localization.other,
+                      value: p2pLanding.others!,
+                    ),
+                    if (p2pLanding.notes!.isNotEmpty)
+                      DetailsText(
+                        name: localization.notes,
+                        value: p2pLanding.notes!,
+                      )
+                    else
+                      const SizedBox(),
+                    DetailsImageList(
+                      imageList: p2pLanding.images ?? [],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        color: blackColor,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 );
+              },
+            );
+          } else {
+            return const Text('No P2P Landing data');
+          }
         },
       ),
     );

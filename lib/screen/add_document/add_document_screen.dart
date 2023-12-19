@@ -118,7 +118,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                               color: greenColor,
                             ),
                             onPressed: () {
-
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

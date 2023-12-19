@@ -11,10 +11,7 @@ class Insurance {
         id: json['id'].toString(),
         insuranceName: json['insuranceName'].toString(),
         other: json['other'].toString(),
-        images:
-            (List<String>.from(json['images'].map((x) => x) as List).isEmpty)
-                ? []
-                : List<String>.from(json['images'].map((x) => x) as List),
+        images: List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

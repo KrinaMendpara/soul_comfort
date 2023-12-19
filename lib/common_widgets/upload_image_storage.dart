@@ -22,7 +22,7 @@ class UploadImageStorage {
   }
 
   static Future<void> documentImageStorage(
-      String imagePath, bool firstProfile, String titleName) async {
+      String imagePath, bool firstProfile, String titleName,) async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     final ref = (firstProfile == true)

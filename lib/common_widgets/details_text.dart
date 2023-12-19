@@ -13,7 +13,7 @@ class DetailsText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -21,7 +21,7 @@ class DetailsText extends StatelessWidget {
             child: Text(
               '$name : ',
               overflow: TextOverflow.ellipsis,
-              // maxLines: 5,
+              maxLines: 2,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -29,7 +29,6 @@ class DetailsText extends StatelessWidget {
           ),
           Expanded(
             child: SizedBox(
-              width: MediaQuery.of(context).size.width /2 - 60,
               child: Text(
                 value,
                 overflow: TextOverflow.ellipsis,

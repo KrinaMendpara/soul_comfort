@@ -4,12 +4,12 @@ import 'package:soul_comfort/generated/l10n.dart';
 
 class AddPropertyDetails extends StatelessWidget {
   const AddPropertyDetails(
-      {required this.residentNameController,
-      required this.residentAddressController,
+      {required this.propertyNameController,
+      required this.propertyAddressController,
       super.key,});
 
-  final TextEditingController residentNameController;
-  final TextEditingController residentAddressController;
+  final TextEditingController propertyNameController;
+  final TextEditingController propertyAddressController;
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +18,19 @@ class AddPropertyDetails extends StatelessWidget {
     return Column(
       children: [
         CommonTextFormField(
-          controller: residentNameController,
+          controller: propertyNameController,
           textInputAction: TextInputAction.next,
-          text: localization.residentName,
+          text: localization.propertyName,
           onChanged: (value) {
-            residentNameController.text = value!;
+            propertyNameController.text = value!;
           },
         ),
         CommonTextFormField(
-          controller: residentAddressController,
+          controller: propertyAddressController,
           textInputAction: TextInputAction.next,
-          text: localization.residentAddress,
+          text: localization.propertyAddress,
           onChanged: (value) {
-            residentAddressController.text = value!;
+            propertyAddressController.text = value!;
           },
         ),
       ],

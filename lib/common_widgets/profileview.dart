@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
@@ -71,7 +70,9 @@ class CommonProfileView extends StatelessWidget {
             ),
           ],
         ),
-        const Divider(),
+        const Divider(
+          color: blackColor,
+        ),
       ],
     );
   }

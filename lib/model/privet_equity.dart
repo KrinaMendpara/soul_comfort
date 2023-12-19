@@ -12,10 +12,7 @@ class PrivetEquity {
         equityName: json['equityName'].toString(),
         others: json['others'] == null ? null : json['others'] as String,
         notes: json['notes'] == null ? null : json['notes'] as String,
-        images:
-            (List<String>.from(json['images'].map((x) => x) as List).isEmpty)
-                ? []
-                : List<String>.from(json['images'].map((x) => x) as List),
+        images: List<String>.from(json['images'] as List),
       );
 
   String? id;

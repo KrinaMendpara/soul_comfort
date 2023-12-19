@@ -6,7 +6,7 @@ import 'package:soul_comfort/flavors.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/language/languages.dart';
 import 'package:soul_comfort/screen/login/login_screen.dart';
-import 'package:soul_comfort/screen/registration/registration_screen.dart';
+import 'package:soul_comfort/screen/soul_comfort/soul_comfort_.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -38,7 +38,7 @@ class App extends StatelessWidget {
               backgroundColor: Colors.transparent,
             ),
           ),
-          home: const LogInScreen(),
+          home: const SoulComfort(),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

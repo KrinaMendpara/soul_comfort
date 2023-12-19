@@ -44,17 +44,14 @@ class CommonTextFormField extends StatelessWidget {
         textInputAction: textInputAction,
         onChanged: onChanged,
         onSaved: onSaved,
-        focusNode: focusNode,
-        autofocus: true,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: validator ?? (value) {
-          if(value!.isEmpty) {
-            Focus.of(context).requestFocus(focusNode);
-            localization.pleaseEnterSomeText;
+        validator: validator ?? ((readOnly == false) ? (value) {
+          if (value == null || value.isEmpty) {
+            return localization.pleaseEnterSomeText;
           } else {
-            null;
+            return null; // Validation passed
           }
-        },
+        } : null),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           enabled: enabled,

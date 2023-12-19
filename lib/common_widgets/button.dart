@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 
-
 class CommonButton extends StatelessWidget {
   const CommonButton({
-    required this.name,
     required this.onTap,
+    this.name,
+    this.widget,
     super.key,
   });
 
-  final String name;
+  final String? name;
+  final Widget? widget;
   final void Function() onTap;
 
   @override
@@ -24,14 +25,15 @@ class CommonButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(
-          child: Text(
-            name,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
+          child: widget ??
+              Text(
+                name!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
         ),
       ),
     );

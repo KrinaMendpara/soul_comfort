@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
 import 'package:soul_comfort/common_widgets/details_text.dart';
 import 'package:soul_comfort/generated/l10n.dart';
@@ -33,7 +34,7 @@ class InsuranceDetails extends StatelessWidget {
                 .doc(currentUser.phoneNumber)
                 .collection('document')
                 .doc('document')
-                .collection(localization.insurance)
+                .collection('insurance')
                 .snapshots()
             : FirebaseFirestore.instance
                 .collection('users')
@@ -44,40 +45,53 @@ class InsuranceDetails extends StatelessWidget {
                 .doc(id)
                 .collection('document')
                 .doc('document')
-                .collection(localization.insurance)
+                .collection('insurance')
                 .snapshots(),
         builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data = snapshot.data!.docs[index].data();
-                    final insurance = Insurance.fromJson(data);
-                    return Column(
-                      children: [
-                        DetailsText(
-                          name: localization.insuranceName,
-                          value: insurance.insuranceName!,
-                        ),
-                        DetailsText(
-                          name: localization.other,
-                          value: insurance.other!,
-                        ),
-                        DetailsImageList(
-                          itemCount: insurance.images!.length,
-                          image: insurance.images![index],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Divider(),
-                        ),
-                      ],
-                    );
-                  },
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data!.docs[index].data();
+                final insurance = Insurance.fromJson(data);
+                return Column(
+                  children: [
+                    DetailsText(
+                      name: localization.insuranceName,
+                      value: insurance.insuranceName!,
+                    ),
+                    DetailsText(
+                      name: localization.other,
+                      value: insurance.other!,
+                    ),
+                    if (insurance.notes!.isNotEmpty)
+                      DetailsText(
+                        name: localization.notes,
+                        value: insurance.notes!,
+                      )
+                    else
+                      const SizedBox(),
+                    DetailsImageList(
+                      imageList: insurance.images ?? [],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        color: blackColor,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 );
+              },
+            );
+          } else {
+            return const Text('No Insurance data');
+          }
         },
       ),
     );

@@ -5,6 +5,7 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
+import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -28,6 +29,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProviders>();
     final localization = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: whiteColor,
@@ -57,15 +59,15 @@ class _LogInScreenState extends State<LogInScreen> {
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               child: PhoneFormField(
                 controller: phoneController,
-                countrySelectorNavigator: const CountrySelectorNavigator.draggableBottomSheet(),
+                countrySelectorNavigator:
+                    const CountrySelectorNavigator.draggableBottomSheet(),
                 defaultCountry: IsoCode.IN,
                 validator: (value) {
                   if (value!.nsn.length < 10) {
                     return localization.pleaseEnterValidPhoneNumber;
                   } else if (value.nsn.length != 10) {
-                    return localization.phoneNumberMustBeOf10Digit;
+                    return localization.phoneNumberShouldBeOf10Digit;
                   }
-
                 },
                 onChanged: (value) {
                   setState(() {
@@ -122,11 +124,21 @@ class _LogInScreenState extends State<LogInScreen> {
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: CommonButton(
-          name: localization.sendOTP,
           onTap: () {
-            print('------------------------------');
             _sendPhoneNumber(context);
           },
+          widget: authProvider.isLogin
+              ? const Indicator(
+                  color: whiteColor,
+                )
+              : Text(
+                  localization.sendOTP,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       ),
     );

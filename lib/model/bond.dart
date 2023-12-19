@@ -12,10 +12,7 @@ class Bonds {
         bondName: json['bondName'] == null ? null : json['bondName'] as String,
         bondDetails:
             json['bondDetails'] == null ? null : json['bondDetails'] as String,
-        images:
-            (List<String>.from(json['images'].map((x) => x) as List).isEmpty)
-                ? []
-                : List<String>.from(json['images'].map((x) => x) as List),
+        images: List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

@@ -10,6 +10,7 @@ import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
 import 'package:soul_comfort/screen/home/home_screen.dart';
+import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 import 'package:soul_comfort/screen/registration/registration_screen.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -55,9 +56,8 @@ class _OtpScreenState extends State<OtpScreen> {
       color: Colors.white54,
       borderRadius: BorderRadius.circular(5),
       border: Border.all(
-        // color: greenColor,
-        color: blackColor
-      ),
+          // color: greenColor,
+          color: blackColor,),
     ),
   );
 
@@ -67,37 +67,7 @@ class _OtpScreenState extends State<OtpScreen> {
       context: context,
       verificationId: widget.verificationId,
       userOTP: otp!,
-      onSuccess: () async {
-        await authProvider.checkExistingUser().then((value) async {
-          if (value == true) {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => HomeScreen(),
-              ),
-                  (route) => false,
-            );
-          } else {
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(authProvider.uid)
-                .set({
-              'id': authProvider.uid,
-              'phoneNumber': widget.phoneNumber,
-            }).then(
-              (value) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => const RegistrationScreen(),
-                  ),
-                  (route) => false,
-                );
-              },
-            );
-          }
-        });
-      },
+      phoneNumber: widget.phoneNumber,
     );
   }
 
@@ -136,7 +106,7 @@ class _OtpScreenState extends State<OtpScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              localization.verificationHasBeenSentTo,
+              localization.otpHasBeenSentForVerification,
               maxLines: 2,
               style: const TextStyle(
                 fontSize: 20,
@@ -172,10 +142,21 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
             ),
             CommonButton(
-              name: localization.submit,
               onTap: () {
                 verifyOTP(context, otpCode);
               },
+              widget: authProvider.isVerification
+                  ? const Indicator(
+                      color: whiteColor,
+                    )
+                  : Text(
+                      localization.submit,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
             TextButton(
               onPressed: second != 0

@@ -1,33 +1,30 @@
 class Property {
   Property({
     this.id,
-    this.residentName,
-    this.residentAddress,
+    this.propertyName,
+    this.propertyAddress,
     this.images,
     this.notes,
   });
 
   factory Property.fromJson(Map<String, dynamic> json) => Property(
         id: json['id'].toString(),
-        residentName: json['residentName'].toString(),
-        residentAddress: json['residentAddress'].toString(),
-        images:
-            (List<String>.from(json['images'].map((x) => x) as List).isEmpty)
-                ? []
-                : List<String>.from(json['images'].map((x) => x) as List).toList(),
+        propertyName: json['propertyName'].toString(),
+        propertyAddress: json['propertyAddress'].toString(),
+        images: List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
   String? id;
-  String? residentName;
-  String? residentAddress;
+  String? propertyName;
+  String? propertyAddress;
   List<String>? images;
   String? notes;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'residentName': residentName,
-        'residentAddress': residentAddress,
+        'propertyName': propertyName,
+        'propertyAddress': propertyAddress,
         'images': List<dynamic>.from(images!.map((x) => x)).isEmpty
             ? []
             : List<dynamic>.from(images!.map((x) => x)),

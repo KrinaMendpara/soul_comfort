@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
@@ -20,23 +20,48 @@ class OpenImageScreen extends StatelessWidget {
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-            openPDF == true ? 'PDF' : 'Image',
-        ),
-      ),
-      body: openPDF == false ? Container(
-        height: MediaQuery.of(context).size.height - 60 ,
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(
-              image,
-            ),
+          openPDF == true ? 'PDF' : 'Image',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ) : SfPdfViewer.network(
-        image,
       ),
+      body: openPDF == false
+          ? Container(
+              height: MediaQuery.of(context).size.height - 60,
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.contain,
+                  image: NetworkImage(
+                          image,
+                        ),
+                ),
+              ),
+            )
+          : SfPdfViewer.network(
+              image,
+              onDocumentLoadFailed: (value) {
+                showDialog<dynamic>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(value.error),
+                      content: Text(value.description),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }

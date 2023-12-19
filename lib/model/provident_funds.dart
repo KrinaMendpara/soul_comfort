@@ -11,10 +11,7 @@ class ProvidentFunds {
         id: json['id'].toString(),
         epfName: json['epfName'] == null ? null : json['epfName'] as String,
         ppfName: json['ppfName'] == null ? null : json['ppfName'] as String,
-        images:
-            (List<String>.from(json['images'].map((x) => x) as List).isEmpty)
-                ? []
-                : List<String>.from(json['images'].map((x) => x) as List),
+        images: List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

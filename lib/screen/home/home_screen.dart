@@ -11,7 +11,7 @@ import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/users.dart';
 import 'package:soul_comfort/providers/userData/user_data_provider.dart';
 import 'package:soul_comfort/screen/document_list/document_list_screen.dart';
-import 'package:soul_comfort/screen/progress_indicator/progress_indicator.dart';
+import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 import 'package:soul_comfort/screen/registration/registration_screen.dart';
 import 'package:soul_comfort/providers/language/languages.dart';
 import 'package:soul_comfort/services/share_pre.dart';
@@ -29,10 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final langList = <String>['English', 'ગુજરાતી', 'हिंदी'];
   String selectedLanguage = UserPreferences.user.userLanguage;
 
-
   @override
   Widget build(BuildContext context) {
-
     final localization = AppLocalizations.of(context);
     final uid = FirebaseAuth.instance.currentUser!;
 
@@ -67,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         e,
                         style: TextStyle(
                           color:
-                              (e == selectedLanguage) ? greenColor : blackColor,
+                          (e == selectedLanguage) ? greenColor : blackColor,
                         ),
                       ),
                     );
@@ -78,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                     await provider.changeLanguage(v!);
                     provider.locale;
+                    print(provider.locale);
+                    print(provider.locale.languageCode);
+                    print('----------');
                   },
                 );
               },
@@ -85,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -98,31 +98,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   .doc(uid.phoneNumber)
                   .snapshots(),
               builder: (context, snapshot) {
-                final data = snapshot.data!.data();
-                final userModel = Users.fromJson(data!);
-                return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DocumentListScreen(
+                if (snapshot.connectionState == ConnectionState.waiting && snapshot.hasError) {
+                  return const CircularProgressIndicator();
+                }
+                else if(snapshot.error == snapshot.hasError){
+                  return const CircularProgressIndicator();
+                }
+                else if(snapshot.hasData){
+                  final data = snapshot.data!.data();
+                  final userModel = Users.fromJson(data!);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DocumentListScreen(
                                 id: '${userModel.id}',
                                 image: '${userModel.image}',
                                 name: '${userModel.name}',
                                 email: '${userModel.email}',
                                 firstProfile: true,
                               ),
-                            ),
-                          );
-                        },
-                        child: CommonProfileView(
-                          height: 100,
-                          width: 100,
-                          userImage: '${userModel.image}',
-                          userName: '${userModel.name}',
-                          userEmail: '${userModel.email}',
                         ),
                       );
+                    },
+                    child: CommonProfileView(
+                      height: 100,
+                      width: 100,
+                      userImage: '${userModel.image}',
+                      userName: '${userModel.name}',
+                      userEmail: '${userModel.email}',
+                    ),
+                  );
+                }
+                else{
+                  return const SizedBox();
+                }
               },
             ),
             StreamBuilder(
@@ -134,42 +146,49 @@ class _HomeScreenState extends State<HomeScreen> {
                   .collection('other Profile')
                   .snapshots(),
               builder: (context, snapshot) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      print(snapshot.data?.docs[index].data());
-                      print('-----------');
-
-                      final data = snapshot.data?.docs[index].data();
-                      final userModel = Users.fromJson(data!);
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DocumentListScreen(
-                                  id: '${userModel.id}',
-                                  image: '${userModel.image}',
-                                  name: '${userModel.name}',
-                                  email: '${userModel.email}',
-                                  firstProfile: false,
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasData) {
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final data = snapshot.data!.docs[index].data();
+                        final userModel = Users.fromJson(data);
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DocumentListScreen(
+                                        id: '${userModel.id}',
+                                        image: '${userModel.image}',
+                                        name: '${userModel.name}',
+                                        email: '${userModel.email}',
+                                        firstProfile: false,
+                                      ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: CommonProfileView(
-                            userImage: '${userModel.image}' ,
-                            userName: '${userModel.name}',
-                            userEmail: '${userModel.email}',
+                              );
+                            },
+                            child: CommonProfileView(
+                              userImage: '${userModel.image}',
+                              userName: '${userModel.name}',
+                              userEmail: '${userModel.email}',
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                );
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
               },
             ),
             const SizedBox(
@@ -186,7 +205,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const RegistrationScreen(
+                builder: (context) =>
+                const RegistrationScreen(
                   firstProfile: false,
                 ),
               ),

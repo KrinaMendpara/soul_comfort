@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
+import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
 import 'package:soul_comfort/common_widgets/details_text.dart';
 import 'package:soul_comfort/generated/l10n.dart';
@@ -34,7 +34,7 @@ class TradingAccountDetails extends StatelessWidget {
                 .doc(currentUser.phoneNumber)
                 .collection('document')
                 .doc('document')
-                .collection(localization.tradingAccount)
+                .collection('trading account')
                 .snapshots()
             : FirebaseFirestore.instance
                 .collection('users')
@@ -45,44 +45,53 @@ class TradingAccountDetails extends StatelessWidget {
                 .doc(id)
                 .collection('document')
                 .doc('document')
-                .collection(localization.tradingAccount)
+                .collection('trading account')
                 .snapshots(),
         builder: (context, snapshot) {
-          return (snapshot.connectionState == ConnectionState.waiting)
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data = snapshot.data!.docs[index].data();
-                    final tradingAccount = TradingAccount.fromJson(data);
-                    return Column(
-                      children: [
-                        DetailsText(
-                          name: localization.stock,
-                          value: tradingAccount.stock!,
-                        ),
-                        DetailsText(
-                          name: localization.mutualFunds,
-                          value: tradingAccount.mutualFunds!,
-                        ),
-                        DetailsText(
-                          name: localization.notes,
-                          value: tradingAccount.notes!,
-                        ),
-                        DetailsImageList(
-                          itemCount: tradingAccount.images!.length,
-                          image: tradingAccount.images![index],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Divider(),
-                        ),
-                      ],
-                    );
-                  },
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data = snapshot.data!.docs[index].data();
+                final tradingAccount = TradingAccount.fromJson(data);
+                return Column(
+                  children: [
+                    DetailsText(
+                      name: localization.stock,
+                      value: tradingAccount.stock!,
+                    ),
+                    DetailsText(
+                      name: localization.mutualFunds,
+                      value: tradingAccount.mutualFunds!,
+                    ),
+                    if (tradingAccount.notes!.isNotEmpty)
+                      DetailsText(
+                        name: localization.notes,
+                        value: tradingAccount.notes!,
+                      )
+                    else
+                      const SizedBox(),
+                    DetailsImageList(
+                      imageList: tradingAccount.images ?? [],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        color: blackColor,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 );
+              },
+            );
+          } else {
+            return const Text('No Trading Account data');
+          }
         },
       ),
     );
