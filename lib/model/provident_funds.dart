@@ -11,7 +11,9 @@ class ProvidentFunds {
         id: json['id'].toString(),
         epfName: json['epfName'] == null ? null : json['epfName'] as String,
         ppfName: json['ppfName'] == null ? null : json['ppfName'] as String,
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
@@ -23,8 +25,8 @@ class ProvidentFunds {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'epfName': epfName,
-        'ppfName': ppfName,
+        'epfName': epfName == null ? null : epfName,
+        'ppfName': ppfName == null ? null :ppfName,
         'images': List<dynamic>.from(images!.map((x) => x)).isEmpty
             ? []
             : List<dynamic>.from(images!.map((x) => x)),

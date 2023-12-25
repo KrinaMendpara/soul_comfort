@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,12 +8,9 @@ import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/common_widgets/profileview.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/users.dart';
-import 'package:soul_comfort/providers/userData/user_data_provider.dart';
-import 'package:soul_comfort/screen/document_list/document_list_screen.dart';
-import 'package:soul_comfort/common_widgets/progress_indicator.dart';
-import 'package:soul_comfort/screen/registration/registration_screen.dart';
 import 'package:soul_comfort/providers/language/languages.dart';
-import 'package:soul_comfort/services/share_pre.dart';
+import 'package:soul_comfort/screen/document_list/document_list_screen.dart';
+import 'package:soul_comfort/screen/registration/registration_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -27,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final langList = <String>['English', 'ગુજરાતી', 'हिंदी'];
-  String selectedLanguage = UserPreferences.user.userLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -65,20 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         e,
                         style: TextStyle(
                           color:
-                          (e == selectedLanguage) ? greenColor : blackColor,
+                          (e == provider.selectedLanguages) ? greenColor : blackColor,
                         ),
                       ),
                     );
                   }).toList(),
                   onChanged: (String? v) async {
-                    setState(() {
-                      selectedLanguage = v!;
-                    });
                     await provider.changeLanguage(v!);
+                    await provider.setLanguages(v);
                     provider.locale;
-                    print(provider.locale);
-                    print(provider.locale.languageCode);
-                    print('----------');
+                    provider.selectedLanguages;
                   },
                 );
               },
@@ -118,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 image: '${userModel.image}',
                                 name: '${userModel.name}',
                                 email: '${userModel.email}',
-                                firstProfile: true,
                               ),
                         ),
                       );
@@ -171,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         image: '${userModel.image}',
                                         name: '${userModel.name}',
                                         email: '${userModel.email}',
-                                        firstProfile: false,
                                       ),
                                 ),
                               );

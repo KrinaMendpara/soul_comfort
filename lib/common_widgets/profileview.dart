@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 
@@ -30,17 +29,16 @@ class CommonProfileView extends StatelessWidget {
                 height: height,
                 width: width,
                 decoration: BoxDecoration(
-                  color: greenColor.withOpacity(0.2),
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: (userImage.contains('jpg') == false)
-                        ? const AssetImage(
-                            'assets/images/profile_picture.jpg',
-                          ) as ImageProvider
-                        : NetworkImage(
+                    image: (userImage.contains('jpg'))
+                        ? NetworkImage(
                             userImage,
-                          ),
+                          )
+                        : const AssetImage(
+                            'assets/images/profile_picture.jpg',
+                          ) as ImageProvider,
                   ),
                 ),
               ),
@@ -72,6 +70,7 @@ class CommonProfileView extends StatelessWidget {
         ),
         const Divider(
           color: blackColor,
+          thickness: 1,
         ),
       ],
     );

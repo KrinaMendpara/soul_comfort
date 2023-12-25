@@ -9,12 +9,10 @@ import 'package:soul_comfort/model/collectible.dart';
 
 class CollectibleDetails extends StatelessWidget {
   const CollectibleDetails({
-    required this.firstProfile,
     required this.id,
     super.key,
   });
 
-  final bool firstProfile;
   final String id;
 
   @override
@@ -26,26 +24,10 @@ class CollectibleDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
-        stream: (firstProfile == true)
-            ? FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
+        stream: FirebaseFirestore.instance
                 .collection('document')
-                .doc('document')
-                .collection('collectible')
-                .snapshots()
-            : FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
-                .collection('other Profile')
                 .doc(id)
-                .collection('document')
-                .doc('document')
-                .collection('collectible')
+                .collection('Collectible')
                 .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +7,7 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
-import 'package:soul_comfort/screen/home/home_screen.dart';
 import 'package:soul_comfort/common_widgets/progress_indicator.dart';
-import 'package:soul_comfort/screen/registration/registration_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({

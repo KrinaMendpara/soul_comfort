@@ -12,7 +12,9 @@ class TradingAccount {
         stock: json['stock'].toString(),
         mutualFunds: json['mutualFunds'].toString(),
         notes: json['notes'] == null ? null : json['notes'] as String,
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
       );
 
   String? id;

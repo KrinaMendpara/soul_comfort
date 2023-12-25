@@ -11,7 +11,9 @@ class Locker {
         id: json['id'].toString(),
         lockerName: json['lockerName'].toString(),
         lockerAddress: json['lockerAddress'].toString(),
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

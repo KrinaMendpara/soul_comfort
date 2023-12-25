@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
@@ -9,43 +8,24 @@ import 'package:soul_comfort/model/privet_equity.dart';
 
 class PrivetEquityDetails extends StatelessWidget {
   const PrivetEquityDetails({
-    required this.firstProfile,
     required this.id,
     super.key,
   });
 
   final String id;
-  final bool firstProfile;
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
 
-    final currentUser = FirebaseAuth.instance.currentUser!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
-        stream: (firstProfile == true)
-            ? FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
+        stream: FirebaseFirestore.instance
                 .collection('document')
-                .doc('document')
-                .collection('privet equity')
-                .snapshots()
-            : FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
-                .collection('other Profile')
                 .doc(id)
-                .collection('document')
-                .doc('document')
-                .collection('privet equity')
+                .collection('Privet Equity')
                 .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

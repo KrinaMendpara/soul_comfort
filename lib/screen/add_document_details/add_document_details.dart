@@ -46,7 +46,6 @@ class AddDocumentDetails extends StatefulWidget {
     required this.name,
     required this.email,
     required this.index,
-    required this.firstProfile,
     super.key,
   });
 
@@ -55,7 +54,6 @@ class AddDocumentDetails extends StatefulWidget {
   final String image;
   final String name;
   final String email;
-  final bool firstProfile;
   final int index;
 
   @override
@@ -104,7 +102,9 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
   File? images;
   String? dataImage;
   var url;
-  List<String> listImage = [];
+  List<String> listImageUrl = [];
+  List<File> listImage = [];
+  List<String?> collectionNameList = [];
 
   final ImagePicker picker = ImagePicker();
   String id = DateTime.now().millisecondsSinceEpoch.toString();
@@ -117,45 +117,38 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     final pickedImageFile = await picker
         .pickImage(
       source: ImageSource.camera,
-    ).whenComplete(() {
+    )
+        .whenComplete(() {
       setState(() {
         _isLoadingImage = true;
       });
     });
-    Navigator.pop(context);
 
     images = File(pickedImageFile!.path);
     dataImage = pickedImageFile.path.split('/').last;
-
-    final ref = (widget.firstProfile == true)
-        ? FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!)
-        : FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('Other_Profile_Image')
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!);
+    Navigator.pop(context);
+    listImage.add(images!);
+    setState(() {
+      _isLoadingImage = false;
+    });
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('documentImage')
+        .child(widget.id)
+        .child(collectionName[widget.index])
+        .child(dataImage!);
     await ref.putFile(images!).whenComplete(() {});
 
     url = await ref.getDownloadURL();
 
-    listImage.add('$url');
-    setState(() {
-      _isLoadingImage = false;
-    });
+    listImageUrl.add('$url');
   }
 
   Future<void> _pickImageFromGallery() async {
     final pickedImageFile = await picker
         .pickImage(
+      maxHeight: 400,
+      preferredCameraDevice: CameraDevice.front,
       source: ImageSource.gallery,
     )
         .whenComplete(() {
@@ -163,33 +156,28 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
         _isLoadingImage = true;
       });
     });
-    Navigator.pop(context);
 
     images = File(pickedImageFile!.path);
     dataImage = pickedImageFile.path.split('/').last;
-    final ref = (widget.firstProfile == true)
-        ? FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!)
-        : FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('Other_Profile_Image')
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!);
-    await ref.putFile(images!).whenComplete(() {});
+    listImage.add(images!);
+    Navigator.pop(context);
 
-    url = await ref.getDownloadURL();
     setState(() {
       _isLoadingImage = false;
     });
-    listImage.add('$url');
+
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('documentImage')
+        .child(widget.id)
+        .child(collectionName[widget.index])
+        .child(dataImage!);
+    await ref.putFile(images!).whenComplete(() {});
+
+    url = await ref.getDownloadURL();
+
+    listImageUrl.add('$url');
+
   }
 
   Future<void> _pickedPdfFile() async {
@@ -199,33 +187,24 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       });
     });
     images = File(pickedFile!.files.single.path!);
-    dataImage = pickedFile!.files.single.path!.split('/').last;
+    dataImage = pickedFile.files.single.path!.split('/').last;
     Navigator.pop(context);
-
-    final ref = (widget.firstProfile)
-        ? FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!)
-        : FirebaseStorage.instance
-            .ref()
-            .child('User_Image')
-            .child(currentUser.uid)
-            .child('Other_Profile_Image')
-            .child('documentImage')
-            .child(collectionName[widget.index])
-            .child(dataImage!);
-    await ref.putFile(images!, SettableMetadata(contentType: '.pdf')).whenComplete(() {});
-
-    url = await ref.getDownloadURL();
+    listImage.add(images!);
     setState(() {
       _isLoadingImage = false;
     });
-    listImage.add('$url');
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('documentImage')
+        .child(widget.id)
+        .child(collectionName[widget.index])
+        .child(dataImage!);
+    await ref
+        .putFile(images!, SettableMetadata(contentType: '.pdf'))
+        .whenComplete(() {});
 
+    url = await ref.getDownloadURL();
+    listImageUrl.add('$url');
   }
 
   Future<void> _showModalBottomSheet() {
@@ -303,7 +282,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       branchName: branchNameController.text,
       ifscCode: ifscCodeController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return bankData.toJson();
   }
@@ -311,7 +290,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
   Map<String, dynamic> propertyDetails() {
     final propertyDetails = Property(
       id: id,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
       propertyAddress: propertyAddressController.text,
       propertyName: propertyNameController.text,
       notes: notesController.text,
@@ -325,7 +304,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       stock: stockController.text,
       mutualFunds: mutualFundsController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return tradingDetails.toJson();
   }
@@ -336,7 +315,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       name: nameController.text,
       details: detailsController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return otherAssets.toJson();
   }
@@ -347,7 +326,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       ppfName: ppfController.text,
       epfName: epfController.text,
       notes: notesController.text,
-      images: listImage ?? [],
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return providentFunds.toJson();
   }
@@ -358,7 +337,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       lockerName: lockerNameController.text,
       lockerAddress: lockerAddressController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return locker.toJson();
   }
@@ -369,7 +348,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       insuranceName: insuranceNameController.text,
       other: otherController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return insurance.toJson();
   }
@@ -380,7 +359,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       nft: nftController.text,
       art: artController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return collectible.toJson();
   }
@@ -391,7 +370,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       bondName: bondNameController.text,
       bondDetails: bondDetailsController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return bond.toJson();
   }
@@ -402,7 +381,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       p2PLanding: p2pLandingNameController.text,
       others: otherP2PLandingController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return p2pLanding.toJson();
   }
@@ -413,119 +392,127 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       equityName: equityNameController.text,
       others: otherEquityController.text,
       notes: notesController.text,
-      images: listImage,
+      images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
     return privetEquity.toJson();
   }
 
+  Future<void> submitData(Map<String, dynamic> dataToJson) async {
+    await FirebaseFirestore.instance
+        .collection('document')
+        .doc(widget.id)
+        .collection(collectionName[widget.index])
+        .add(
+          dataToJson,
+        );
+
+    await FirebaseFirestore.instance
+        .collection('document')
+        .doc(widget.id)
+        .get()
+        .then((value) {
+      final collectionList = ((value.data()!['collectionList'] ?? []) as List)
+          .map((e) => e.toString())
+          .toList();
+      setState(() {
+        collectionNameList = collectionList;
+      });
+
+    });
+
+    if (!collectionNameList.contains(collectionName[widget.index])) {
+      collectionNameList.add(collectionName[widget.index]);
+
+      await FirebaseFirestore.instance.collection('document').doc(widget.id).set({
+        'id': widget.id,
+        'collectionList': collectionNameList,
+      });
+    }
+  }
+
+
+
   List<String> collectionName = [
-    'bank account',
-    'property',
-    'trading account',
-    'other assets',
-    'provident funds',
-    'locker',
-    'insurance',
-    'collectible',
-    'bond',
-    'p2P landing',
-    'privet equity',
+    'Bank Account',
+    'Property',
+    'Trading Account',
+    'Other Assets',
+    'Provident Funds',
+    'Locker',
+    'Insurance',
+    'Collectible',
+    'Bond',
+    'P2P Landing',
+    'Privet Equity',
   ];
 
-  Future<void> submitData(Map<String, dynamic> dataToJson) async {
-    (widget.firstProfile == true)
-        ? await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('userData')
-            .doc(currentUser.phoneNumber)
-            .collection('document')
-            .doc('document')
-            .collection(collectionName[widget.index])
-            .add(
-              dataToJson,
-            )
-        : await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('userData')
-            .doc(currentUser.phoneNumber)
-            .collection('other Profile')
-            .doc(widget.id)
-            .collection('document')
-            .doc('document')
-            .collection(collectionName[widget.index])
-            .add(
-              dataToJson,
-            );
-  }
+  late final saveDocumentDetails = <Map<String, dynamic>>[
+    bankDetails(),
+    propertyDetails(),
+    tradingDetails(),
+    otherAssetsDetails(),
+    providentFundsDetails(),
+    lockerDetails(),
+    insuranceDetails(),
+    collectibleDetails(),
+    bondDetails(),
+    p2pLandingDetails(),
+    privetEquityDetails(),
+  ];
+
+  late final widgetList = <Widget>[
+    AddBankAccount(
+      bankNameController: bankNameController,
+      branchNameController: branchNameController,
+      accountTypeController: accountTypeController,
+      accountNumberController: accountNumberController,
+      ifscCodeController: ifscCodeController,
+    ),
+    AddPropertyDetails(
+      propertyNameController: propertyNameController,
+      propertyAddressController: propertyAddressController,
+    ),
+    AddTradingAccountDetails(
+      stockController: stockController,
+      mutualFundsController: mutualFundsController,
+    ),
+    AddOtherAssetsDetails(
+      nameController: nameController,
+      detailsController: detailsController,
+    ),
+    AddProvidentFundsDetails(
+      epfController: epfController,
+      ppfController: ppfController,
+    ),
+    AddLockerDetails(
+      lockerNameController: lockerNameController,
+      lockerAddressController: lockerAddressController,
+    ),
+    AddInsuranceDetails(
+      insuranceNameController: insuranceNameController,
+      otherController: otherController,
+    ),
+    AddCollectibleDetails(
+      artController: artController,
+      nftController: nftController,
+    ),
+    AddBondDetails(
+      bondNameController: bondNameController,
+      bondDetailsController: bondDetailsController,
+    ),
+    AddP2PLandingDetails(
+      p2pLandingNameController: p2pLandingNameController,
+      otherP2PLandingController: otherP2PLandingController,
+    ),
+    AddPrivetEquityDetails(
+      equityNameController: equityNameController,
+      otherEquityController: otherEquityController,
+    ),
+  ];
+
 
   @override
   Widget build(BuildContext context) {
-    final saveDocumentDetails = <Map<String, dynamic>>[
-      bankDetails(),
-      propertyDetails(),
-      tradingDetails(),
-      otherAssetsDetails(),
-      providentFundsDetails(),
-      lockerDetails(),
-      insuranceDetails(),
-      collectibleDetails(),
-      bondDetails(),
-      p2pLandingDetails(),
-      privetEquityDetails(),
-    ];
-
-    final widgetList = <Widget>[
-      AddBankAccount(
-        bankNameController: bankNameController,
-        branchNameController: branchNameController,
-        accountTypeController: accountTypeController,
-        accountNumberController: accountNumberController,
-        ifscCodeController: ifscCodeController,
-      ),
-      AddPropertyDetails(
-        propertyNameController: propertyNameController,
-        propertyAddressController: propertyAddressController,
-      ),
-      AddTradingAccountDetails(
-        stockController: stockController,
-        mutualFundsController: mutualFundsController,
-      ),
-      AddOtherAssetsDetails(
-        nameController: nameController,
-        detailsController: detailsController,
-      ),
-      AddProvidentFundsDetails(
-        epfController: epfController,
-        ppfController: ppfController,
-      ),
-      AddLockerDetails(
-        lockerNameController: lockerNameController,
-        lockerAddressController: lockerAddressController,
-      ),
-      AddInsuranceDetails(
-        insuranceNameController: insuranceNameController,
-        otherController: otherController,
-      ),
-      AddCollectibleDetails(
-        artController: artController,
-        nftController: nftController,
-      ),
-      AddBondDetails(
-        bondNameController: bondNameController,
-        bondDetailsController: bondDetailsController,
-      ),
-      AddP2PLandingDetails(
-        p2pLandingNameController: p2pLandingNameController,
-        otherP2PLandingController: otherP2PLandingController,
-      ),
-      AddPrivetEquityDetails(
-        equityNameController: equityNameController,
-        otherEquityController: otherEquityController,
-      ),
-    ];
-
     final localization = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: whiteColor,
@@ -540,12 +527,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            20,
-            0,
-            20,
-            30,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -603,32 +585,28 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                     ...List.generate(
                       listImage.length,
                       (index) {
-                        print(listImage.length - 1);
-                        print(index);
-                        print(_isLoadingImage && listImage.length - 1 == index);
-                        print('---------------');
-                        print('==============');
                         return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _isLoadingImage && listImage.length - 1 == index
-                            ? Container(
-                                height: 60,
-                                width: 60,
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(),
+                          padding: const EdgeInsets.only(bottom: 10),
+                          // child: _isLoadingImage &&
+                          //         listImage.length - 1 == index ? Container(
+                          //         height: 60,
+                          //         width: 60,
+                          //         padding: const EdgeInsets.all(10),
+                          //         decoration: BoxDecoration(
+                          //           shape: BoxShape.circle,
+                          //           border: Border.all(),
+                          //         ),
+                          //         child: const Indicator(),
+                          //       ) :
+                                child : AddDetailsImage(
+                                  image: listImage[index],
+                                  onTap: () {
+                                    setState(() {
+                                      listImageUrl.remove(listImageUrl[index]);
+                                      listImage.remove(listImage[index]);
+                                    });
+                                  },
                                 ),
-                                child: const Indicator(),
-                              )
-                            : AddDetailsImage(
-                                image: listImage[index],
-                                onTap: () {
-                                  setState(() {
-                                    listImage.remove(listImage[index]);
-                                  });
-                                },
-                              ),
                         );
                       },
                     ),
@@ -659,11 +637,12 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                       try {
                         await submitData(saveDocumentDetails[widget.index]);
                         Navigator.pop(context);
+
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Error: $e'),
-                            backgroundColor: Colors.red,
+                            backgroundColor: blackColor,
                           ),
                         );
                       } finally {

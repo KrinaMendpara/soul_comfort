@@ -11,7 +11,6 @@ class AddDocumentScreen extends StatefulWidget {
     required this.image,
     required this.name,
     required this.email,
-    required this.firstProfile,
     super.key,
   });
 
@@ -19,7 +18,6 @@ class AddDocumentScreen extends StatefulWidget {
   final String image;
   final String name;
   final String email;
-  final bool firstProfile;
 
   @override
   State<AddDocumentScreen> createState() => _AddDocumentScreenState();
@@ -128,7 +126,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                                     name: widget.name,
                                     email: widget.email,
                                     index: index,
-                                    firstProfile: widget.firstProfile,
                                   ),
                                 ),
                               );

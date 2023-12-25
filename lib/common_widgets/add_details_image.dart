@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/screen/open_image/open_image_screen.dart';
@@ -10,7 +12,7 @@ class AddDetailsImage extends StatelessWidget {
     super.key,
   });
 
-  final String? image;
+  final File? image;
   final void Function()? onTap;
 
   @override
@@ -26,8 +28,8 @@ class AddDetailsImage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => OpenImageScreen(
-                    image: image!,
-                    openPDF: image!.contains('.jpg') ? false : true,
+                    image: image!.path,
+                    openPDF: image!.path.contains('.jpg') ? false : true,
                   ),
                 ),
               );
@@ -36,20 +38,19 @@ class AddDetailsImage extends StatelessWidget {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                border: image!.contains('.jpg') ? null :  Border.all(
+                border: image!.path.contains('.jpg') ? null :  Border.all(
                   color: blackColor,
                 ),
                 color: greenColor.withOpacity(0.1),
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: (image!.contains('.jpg') == false)
-                      ? const AssetImage(
+                  image: image!.path.contains('.jpg')
+                      ? FileImage(
+                    image!,
+                  ): const AssetImage(
                           'assets/images/Pdf.jpg',
-                        ) as ImageProvider
-                      : NetworkImage(
-                          image!,
-                        ),
+                        ) as ImageProvider,
                 ),
               ),
               // child: isLoadingImage ? Indicator() : ((image!.contains('.jpg'))

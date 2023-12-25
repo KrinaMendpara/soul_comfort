@@ -32,7 +32,6 @@ class CommonTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final focusNode = FocusNode();
     final localization = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:soul_comfort/app.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
+import 'package:soul_comfort/providers/imageStorage/upload_image_storage.dart';
 import 'package:soul_comfort/providers/language/languages.dart';
 import 'package:soul_comfort/providers/userData/user_data_provider.dart';
 import 'package:soul_comfort/services/firebase_option.dart';
@@ -31,6 +32,10 @@ Future<void> main() async {
               context,
               ) =>
               UserDataProvider(),
+        ),
+        ChangeNotifierProvider<UploadImageStorage>(
+          create: (context) =>
+              UploadImageStorage(),
         ),
       ],
       child: const App(),

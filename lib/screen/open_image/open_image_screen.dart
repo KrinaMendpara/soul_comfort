@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -20,27 +18,15 @@ class OpenImageScreen extends StatelessWidget {
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-          openPDF == true ? 'PDF' : 'Image',
+          openPDF ? 'PDF' : 'Image',
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: openPDF == false
-          ? Container(
-              height: MediaQuery.of(context).size.height - 60,
-              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: NetworkImage(
-                          image,
-                        ),
-                ),
-              ),
-            )
-          : SfPdfViewer.network(
+      body: openPDF
+          ? SfPdfViewer.network(
               image,
               onDocumentLoadFailed: (value) {
                 showDialog<dynamic>(
@@ -61,6 +47,18 @@ class OpenImageScreen extends StatelessWidget {
                   },
                 );
               },
+            )
+          : Container(
+              height: MediaQuery.of(context).size.height - 60,
+              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.contain,
+                  image: NetworkImage(
+                    image,
+                  ),
+                ),
+              ),
             ),
     );
   }

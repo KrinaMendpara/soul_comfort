@@ -19,7 +19,9 @@ class BankAccount {
             json['accountType'] == null ? null : json['accountType'] as String,
         ifscCode: json['ifscCode'] == null ? null : json['ifscCode'] as String,
         notes: json['notes'] == null ? null : json['notes'] as String,
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
       );
 
   String? id;

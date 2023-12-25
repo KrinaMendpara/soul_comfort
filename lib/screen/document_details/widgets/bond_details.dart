@@ -10,12 +10,10 @@ import 'package:soul_comfort/model/bond.dart';
 class BondDetails extends StatelessWidget {
   const BondDetails({
     required this.id,
-    required this.firstProfile,
     super.key,
   });
 
   final String id;
-  final bool firstProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -25,26 +23,10 @@ class BondDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
-        stream: (firstProfile == true)
-            ? FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
+        stream: FirebaseFirestore.instance
                 .collection('document')
-                .doc('document')
-                .collection('bond')
-                .snapshots()
-            : FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
-                .collection('other Profile')
                 .doc(id)
-                .collection('document')
-                .doc('document')
-                .collection('bond')
+                .collection('Bond')
                 .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

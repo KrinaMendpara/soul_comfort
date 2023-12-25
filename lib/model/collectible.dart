@@ -11,7 +11,9 @@ class Collectible {
         id: json['id'].toString(),
         art: json['art'] == null ? null : json['art'] as String,
         nft: json['nft'] == null ? null : json['nft'] as String,
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
@@ -23,8 +25,8 @@ class Collectible {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'art': art,
-        'nft': nft,
+        'art': art == null ? null : art,
+        'nft': nft == null ? null : nft,
         'notes': notes == null ? null : notes,
         'images': List<dynamic>.from(images!.map((x) => x)).isEmpty
             ? []

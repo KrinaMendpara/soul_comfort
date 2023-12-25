@@ -11,40 +11,21 @@ import 'package:soul_comfort/model/bank_account.dart';
 class BankAccountDetails extends StatelessWidget {
   const BankAccountDetails({
     required this.id,
-    required this.firstProfile,
     super.key,
   });
 
-  final bool firstProfile;
   final String id;
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-    final currentUser = FirebaseAuth.instance.currentUser!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
-        stream: (firstProfile == true)
-            ? FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
+        stream: FirebaseFirestore.instance
                 .collection('document')
-                .doc('document')
-                .collection('bank account')
-                .snapshots()
-            : FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .collection('userData')
-                .doc(currentUser.phoneNumber)
-                .collection('other Profile')
                 .doc(id)
-                .collection('document')
-                .doc('document')
-                .collection('bank account')
+                .collection('Bank Account')
                 .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

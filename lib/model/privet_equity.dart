@@ -12,7 +12,9 @@ class PrivetEquity {
         equityName: json['equityName'].toString(),
         others: json['others'] == null ? null : json['others'] as String,
         notes: json['notes'] == null ? null : json['notes'] as String,
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
       );
 
   String? id;
@@ -24,7 +26,7 @@ class PrivetEquity {
   Map<String, dynamic> toJson() => {
         'id': id,
         'equityName': equityName,
-        'others': others,
+        'others': others == null ? null : others,
         'notes': notes == null ? null : notes,
         'images': List<dynamic>.from(images!.map((x) => x)).isEmpty
             ? []

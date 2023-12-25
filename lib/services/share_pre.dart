@@ -12,21 +12,13 @@ class UserPreferences {
   }
 
 
-  set userLanguage(String languages) => pref!.setString('selectedLanguage', languages);
-  String get userLanguage => pref!.getString('selectedLanguage') ?? 'en';
+  set userLanguage(String languages) => pref!.setString('userLanguage', languages);
+  String get userLanguage => pref!.getString('userLanguage') ?? 'en';
 
-
-  set userImageList (List<String> image) => pref!.setStringList('userImageList', image);
-  List<String> get userImageList => pref!.getStringList('userImageList') ?? [];
-
-
-  set userNameList (List<String> image) => pref!.setStringList('userImageList', image);
-  List<String> get userNameList => pref!.getStringList('userImageList') ?? [];
-
-  set userEmailList (List<String> image) => pref!.setStringList('userImageList', image);
-  List<String> get userEmailList => pref!.getStringList('userImageList') ?? [];
-
-
-
+  set selectedLanguage(String languages) => pref!.setString('selectedLanguage', languages);
+  String get selectedLanguage => pref!.getString('selectedLanguage') ?? 'English';
+  //
+  // set collectionList (List<String> collectionName) => pref!.setStringList('collectionList', collectionName);
+  // List<String> get collectionList => pref!.getStringList('collectionList') ?? [];
 
 }

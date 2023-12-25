@@ -39,15 +39,16 @@ dependencies:
     sdk: flutter
   intl: any
   file_picker: ^6.1.1
-  firebase_auth: ^4.15.0
-  firebase_storage: ^11.5.3
-  cloud_firestore: ^4.13.3
+#  flutterfire_ui: ^0.3.0
+  firebase_auth: ^4.15.3
+  firebase_storage: ^11.5.6
+  cloud_firestore: ^4.13.6
   image_picker: ^1.0.4
   flutter_cached_pdfview: ^0.4.2
   pinput: ^3.0.1
   provider: ^6.1.1
   phone_form_field: ^8.1.0
-  syncfusion_flutter_pdfviewer: ^23.2.6
+  syncfusion_flutter_pdfviewer: ^24.1.41
   shared_preferences: ^2.2.2
   very_good_analysis: ^5.1.0
 
@@ -86,6 +87,24 @@ flavorizr:
         applicationId: "com.example.soul_comfort"
         firebase:
           config: '.firebase/prod/google-services.json'
+
+default:
+
+  assets:download
+  assets:extract
+  android:androidManifest
+  android:buildGradle
+  android:dummyAssets
+  android:icons
+  flutter:flavors
+  flutter:app
+  flutter:pages
+  flutter:main
+  flutter:targets
+  google:firebase
+  huawei:agconnect
+  assets:clean
+  ide:config
 
 
 # For information on the generic Dart part of this file, see the
@@ -134,3 +153,4 @@ flutter:
 flutter_intl:
   enabled: true
   class_name: AppLocalizations
+

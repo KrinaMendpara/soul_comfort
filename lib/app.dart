@@ -5,8 +5,7 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/flavors.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/language/languages.dart';
-import 'package:soul_comfort/screen/login/login_screen.dart';
-import 'package:soul_comfort/screen/soul_comfort/soul_comfort_.dart';
+import 'package:soul_comfort/screen/splash_screen/splash_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -23,6 +22,9 @@ class App extends StatelessWidget {
               primary: greenColor,
               seedColor: whiteColor,
             ),
+            focusColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             appBarTheme: const AppBarTheme(
               backgroundColor: whiteColor,
               elevation: 0,
@@ -38,12 +40,14 @@ class App extends StatelessWidget {
               backgroundColor: Colors.transparent,
             ),
           ),
-          home: const SoulComfort(),
+          home: const SplashScreen(),
           localizationsDelegates: const [
+            // FlutterFireUILocalizations.withDefaultOverrides(AppLocalizations()),
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
+            // FlutterFireUILocalizations.delegate,
           ],
           supportedLocales: const AppLocalizationDelegate().supportedLocales,
           locale: value.locale,
@@ -51,25 +55,4 @@ class App extends StatelessWidget {
       },
     );
   }
-
-  Widget _flavorBanner({
-    required Widget child,
-    bool show = true,
-  }) =>
-      show
-          ? Banner(
-              location: BannerLocation.topStart,
-              message: F.name,
-              color: Colors.green.withOpacity(0.6),
-              textDirection: TextDirection.ltr,
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-                letterSpacing: 1,
-              ),
-              child: child,
-            )
-          : Container(
-              child: child,
-            );
 }

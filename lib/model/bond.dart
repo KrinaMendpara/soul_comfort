@@ -9,10 +9,11 @@ class Bonds {
 
   factory Bonds.fromJson(Map<String, dynamic> json) => Bonds(
         id: json['id'].toString(),
-        bondName: json['bondName'] == null ? null : json['bondName'] as String,
-        bondDetails:
-            json['bondDetails'] == null ? null : json['bondDetails'] as String,
-        images: List<String>.from(json['images'] as List),
+        bondName: json['bondName'] as String,
+        bondDetails: json['bondDetails'] as String,
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

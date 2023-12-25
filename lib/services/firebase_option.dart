@@ -20,7 +20,7 @@ class FirebaseOption {
           appId : '1:61284782026:android:a3e0949d75f4ea9eb04933',
           messagingSenderId : '61284782026',
           projectId : 'soul-comfort-3d60a',
-          // storageBucket: 'soul-comfort-3d60a.appspot.com',
+          storageBucket: 'soul-comfort-3d60a.appspot.com',
         );
 
       default :

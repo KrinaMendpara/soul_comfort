@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:soul_comfort/screen/home/home_screen.dart';
 import 'package:soul_comfort/screen/otp/otp_screen.dart';
-import 'package:soul_comfort/screen/progress_Indicator/progress_indicator_screen.dart';
 import 'package:soul_comfort/screen/registration/registration_screen.dart';
 
 class AuthProviders extends ChangeNotifier {
@@ -34,6 +32,7 @@ class AuthProviders extends ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
+        timeout: const Duration(seconds: 100),
         codeSent: (verificationId, forceResendingToken) {
           isLoading(value: false);
           Navigator.push(
@@ -97,17 +96,17 @@ class AuthProviders extends ChangeNotifier {
         _uid = user.uid;
         await checkExistingUser().then(
           (value) async {
-            if (value == true) {
+            if (value == false) {
               verificationLoader(value: false);
 
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => const HomeScreen(),
-                ),
-                (route) => false,
-              );
-            } else {
+            //   await Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (ctx) => const HomeScreen(),
+            //     ),
+            //     (route) => false,
+            //   );
+            // } else {
               await FirebaseFirestore.instance
                   .collection('users')
                   .doc(uid)

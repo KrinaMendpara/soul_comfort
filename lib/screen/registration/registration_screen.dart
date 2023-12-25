@@ -11,7 +11,6 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/common_widgets/select_profilepic.dart';
 import 'package:soul_comfort/common_widgets/textformfield.dart';
-import 'package:soul_comfort/common_widgets/upload_image_storage.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/users.dart';
 import 'package:soul_comfort/providers/userData/user_data_provider.dart';
@@ -51,8 +50,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _pickImageFromCamera() async {
     final pickedImageFile = await picker.pickImage(
       source: ImageSource.camera,
-      imageQuality: 50,
-      maxWidth: 150,
+      imageQuality: 100,
+      maxWidth: 100,
     );
 
     Navigator.pop(context);
@@ -79,8 +78,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _pickImageFromGallery() async {
     final pickedImageFile = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 50,
-      maxWidth: 150,
+      imageQuality: 0,
+      maxWidth: 100,
     );
     Navigator.pop(context);
     setState(() {
@@ -327,6 +326,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   onSaved: (value) {
                     phoneNumberController.text =
                         '${FirebaseAuth.instance.currentUser!.phoneNumber}';
+                    return null;
                   },
                 ),
                 if (!widget.firstProfile)

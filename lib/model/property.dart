@@ -11,7 +11,9 @@ class Property {
         id: json['id'].toString(),
         propertyName: json['propertyName'].toString(),
         propertyAddress: json['propertyAddress'].toString(),
-        images: List<String>.from(json['images'] as List),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 

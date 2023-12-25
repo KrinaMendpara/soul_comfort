@@ -10,8 +10,10 @@ class Insurance {
   factory Insurance.fromJson(Map<String, dynamic> json) => Insurance(
         id: json['id'].toString(),
         insuranceName: json['insuranceName'].toString(),
-        other: json['other'].toString(),
-        images: List<String>.from(json['images'] as List),
+        other: json['other'] == null ? null : json['other'].toString(),
+        images: List<String>.from(json['images'] as List) == null
+            ? null
+            : List<String>.from(json['images'] as List),
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
@@ -24,7 +26,7 @@ class Insurance {
   Map<String, dynamic> toJson() => {
         'id': id,
         'insuranceName': insuranceName,
-        'other': other,
+        'other': other == null ? null : other,
         'images': List<dynamic>.from(images!.map((x) => x)).isEmpty
             ? []
             : List<dynamic>.from(images!.map((x) => x)),
