@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/generated/l10n.dart';
+import 'package:soul_comfort/providers/auth/auth_provider.dart';
 import 'package:soul_comfort/screen/home/home_screen.dart';
 import 'package:soul_comfort/screen/login/login_screen.dart';
 
@@ -21,26 +23,39 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  timer() {
+  void timer() {
     Timer(const Duration(seconds: 2), () async {
       final currentUser = FirebaseAuth.instance.currentUser;
-      if(currentUser != null) {
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => const HomeScreen(),
-                ),
-                    (route) => false,
-              );
-            } else {
-              await Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (ctx) => const LogInScreen(),
-                ),
-                    (route) => false,
-              );
-            }
-          // });
+      // await context.read<AuthProviders>().checkDeleteUser().then((value) async {
+      //   if(value == false) {
+          if(currentUser != null) {
+            await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => const HomeScreen(),
+              ),
+                  (route) => false,
+            );
+          } else {
+            await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => const LogInScreen(),
+              ),
+                  (route) => false,
+            );
+          }
+        // }
+        // else {
+        //   await Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (ctx) => const LogInScreen(),
+        //     ),
+        //         (route) => false,
+        //   );
+        // }
+      // });
     });
   }
 

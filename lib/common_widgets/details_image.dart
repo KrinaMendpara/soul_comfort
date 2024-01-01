@@ -35,29 +35,14 @@ class DetailsImageList extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => OpenImageScreen(
                           image: imageList![index]!,
-                          openPDF: imageList![index]!.contains('.jpg')
-                              ? false
-                              : true,
+                          openPDF:
+                              imageList![index]!.contains('pdf') ? true : false,
                         ),
                       ),
                     );
                   },
-                  child: (imageList![index]!.contains('jpg'))
+                  child: (imageList![index]!.contains('pdf'))
                       ? Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width - 30,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(
-                                imageList![index]!,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(
                           height: 180,
                           width: MediaQuery.of(context).size.width - 30,
                           padding: const EdgeInsets.all(7),
@@ -105,7 +90,8 @@ class DetailsImageList extends StatelessWidget {
                                         height: 30,
                                         width: 30,
                                         child: Image.asset(
-                                            'assets/icons/pdf_icon.png'),
+                                          'assets/icons/pdf_icon.png',
+                                        ),
                                       ),
                                       Expanded(
                                         child: Padding(
@@ -123,6 +109,20 @@ class DetailsImageList extends StatelessWidget {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width - 30,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              fit: BoxFit.contain,
+                              image: NetworkImage(
+                                imageList![index]!,
+                              ),
                             ),
                           ),
                         ),

@@ -11,19 +11,23 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/common_widgets/select_profilepic.dart';
 import 'package:soul_comfort/common_widgets/textformfield.dart';
+import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/users.dart';
 import 'package:soul_comfort/providers/userData/user_data_provider.dart';
+import 'package:soul_comfort/screen/delete_account/delete_account.dart';
 import 'package:soul_comfort/screen/home/home_screen.dart';
 import 'package:soul_comfort/services/share_pre.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({
     this.firstProfile = true,
+    this.editProfile = false,
     super.key,
   });
 
   final bool firstProfile;
+  final bool editProfile;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -40,18 +44,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController birthDateController = TextEditingController();
 
   String? image;
-  var ref;
-  var url;
+  String? url;
+  Users? users;
+  bool _isDeleteUser = false;
 
   User? currentUser = FirebaseAuth.instance.currentUser;
   final ImagePicker picker = ImagePicker();
   UserPreferences pref = UserPreferences.user;
+  final uid = FirebaseAuth.instance.currentUser!;
 
   Future<void> _pickImageFromCamera() async {
     final pickedImageFile = await picker.pickImage(
       source: ImageSource.camera,
-      imageQuality: 100,
-      maxWidth: 100,
     );
 
     Navigator.pop(context);
@@ -59,7 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       image = pickedImageFile!.path;
     });
 
-    ref = (widget.firstProfile)
+    final ref = (widget.firstProfile)
         ? FirebaseStorage.instance
             .ref()
             .child('User_Image')
@@ -78,8 +82,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _pickImageFromGallery() async {
     final pickedImageFile = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 0,
-      maxWidth: 100,
     );
     Navigator.pop(context);
     setState(() {
@@ -88,7 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     final dataImage = pickedImageFile!.path.split('/').last;
     // await UploadImageStorage.imageStorage(image!, widget.firstProfile);
-    ref = (widget.firstProfile)
+    final ref = (widget.firstProfile)
         ? FirebaseStorage.instance
             .ref()
             .child('User_Image')
@@ -143,16 +145,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SelectProfilePic(
                     title: localization.camera,
-                    icon: 'assets/icons/camera.png',
+                    icon: Assets.icons.camera.path,
                     onTap: _pickImageFromCamera,
                   ),
                   SelectProfilePic(
-                    icon: 'assets/icons/gallery.png',
+                    icon: Assets.icons.gallery.path,
                     title: localization.uploadFromGallery,
                     onTap: _pickImageFromGallery,
                   ),
                   SelectProfilePic(
-                    icon: 'assets/images/profile_picture.jpg',
+                    icon: Assets.images.profilePicture.path,
                     title: localization.removeProfilePicture,
                     onTap: _removeProfilePicture,
                   ),
@@ -166,10 +168,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset(
-                  'assets/icons/cancel.png',
-                  height: 35,
-                  width: 35,
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: greenColor.withOpacity(0.2),
+                  child: const Icon(
+                    Icons.close,
+                    color: blackColor,
+                  ),
                 ),
               ),
             ),
@@ -180,7 +185,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _submitData(BuildContext context) async {
-    final uid = FirebaseAuth.instance.currentUser!;
     final id = FirebaseFirestore.instance
         .collection('users')
         .doc(uid.uid)
@@ -200,9 +204,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       birthDate: birthDateController.text,
       phoneNumber: currentUser!.phoneNumber,
       relation: relationController.text,
+      isDeleteUser: _isDeleteUser,
     );
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       if (widget.firstProfile == true) {
         await FirebaseFirestore.instance
             .collection('users')
@@ -240,6 +245,64 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
+  Future<void> editProfileData() async {
+    if (widget.editProfile) {
+      final data = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid.uid)
+          .collection('userData')
+          .doc(uid.phoneNumber)
+          .get();
+      users = Users.fromJson(data.data()!);
+      nameController.text = users!.name;
+      addressController.text = users!.address;
+      emailController.text = users!.email;
+      phoneNumberController.text = users!.phoneNumber!;
+      ageController.text = users!.age;
+      birthDateController.text = users!.birthDate;
+      image = users!.image;
+      _isDeleteUser = users!.isDeleteUser;
+      setState(() {});
+
+      print('users!.isDeleteUser --------- ${users!.isDeleteUser}');
+    }
+  }
+
+  Future<void> submitEditProfileData() async {
+    final user = Users(
+      id: currentUser!.uid,
+      name: nameController.text,
+      image: users!.image ?? url!,
+      address: addressController.text,
+      email: emailController.text,
+      age: ageController.text,
+      birthDate: birthDateController.text,
+      phoneNumber: currentUser!.phoneNumber,
+      isDeleteUser: _isDeleteUser,
+    );
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid.uid)
+        .collection('userData')
+        .doc(uid.phoneNumber)
+        .update(
+          user.toJson(),
+        );
+    await Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+      (route) => false,
+    );
+  }
+
+  @override
+  void initState() {
+    editProfileData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
@@ -247,9 +310,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-          widget.firstProfile
-              ? localization.registration
-              : localization.addProfile,
+          widget.editProfile
+              ? localization.editProfile
+              : widget.firstProfile
+                  ? localization.registration
+                  : localization.addProfile,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -267,7 +332,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: _showModalBottomSheet,
@@ -279,13 +343,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: image != null
-                            ? FileImage(
-                                File(image!),
-                              )
-                            : const AssetImage(
-                                'assets/images/profile_picture.jpg',
-                              ) as ImageProvider,
+                        image: (image != null)
+                            ? (widget.editProfile)
+                                ? NetworkImage(
+                                    users!.image!,
+                                  ) as ImageProvider
+                                : FileImage(
+                                    File(image!),
+                                  )
+                            : AssetImage(
+                                Assets.images.profilePicture.path,
+                              ),
                       ),
                     ),
                   ),
@@ -307,10 +375,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   controller: emailController,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
-                    if (value == null ) {
+                    if (value == null) {
                       return localization.pleaseEnterSomeText;
-                    }
-                    else if(value.isEmpty || !value.contains('@') || !value.contains('.com')){
+                    } else if (value.isEmpty ||
+                        !value.contains('@') ||
+                        !value.contains('.com')) {
                       return localization.invalidEmail;
                     }
                     return null;
@@ -384,14 +453,47 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ],
                 ),
+                if (widget.editProfile)
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isDeleteUser = true;
+                          users!.isDeleteUser = true;
+                        });
+                        // submitEditProfileData();
+                        deleteUserAccount(
+                          context: context,
+                          imageUrl: users!.image!,
+                          userEmail: users!.email,
+                          userName: users!.name,
+                        );
+                      },
+
+                      child: Text(
+                        localization.deleteMyAccount,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: CommonButton(
-                    name: widget.firstProfile
-                        ? localization.save
-                        : localization.addProfile,
+                    name: widget.editProfile
+                        ? localization.editProfile
+                        : widget.firstProfile
+                            ? localization.save
+                            : localization.addProfile,
                     onTap: () async {
-                      await _submitData(context);
+                      if (widget.editProfile) {
+                        await submitEditProfileData();
+                      } else {
+                        await _submitData(context);
+                      }
                     },
                   ),
                 ),

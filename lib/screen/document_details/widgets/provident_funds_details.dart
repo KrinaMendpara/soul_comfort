@@ -17,8 +17,6 @@ class ProvidentFundsDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
@@ -57,6 +55,7 @@ class ProvidentFundsDetails extends StatelessWidget {
                       const SizedBox(),
                     DetailsImageList(
                       imageList: providentFunds.images ?? [],
+
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),

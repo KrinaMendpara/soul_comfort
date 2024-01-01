@@ -48,18 +48,7 @@ class OpenImageScreen extends StatelessWidget {
                 );
               },
             )
-          : Container(
-              height: MediaQuery.of(context).size.height - 60,
-              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: NetworkImage(
-                    image,
-                  ),
-                ),
-              ),
-            ),
+          : Center(child: Image.network(image)),
     );
   }
 }

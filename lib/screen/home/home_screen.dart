@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final uid = FirebaseAuth.instance.currentUser!;
-
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -59,8 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         e,
                         style: TextStyle(
-                          color:
-                          (e == provider.selectedLanguages) ? greenColor : blackColor,
+                          color: (e == provider.selectedLanguages)
+                              ? greenColor
+                              : blackColor,
                         ),
                       ),
                     );
@@ -68,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: (String? v) async {
                     await provider.changeLanguage(v!);
                     await provider.setLanguages(v);
-                    provider.locale;
-                    provider.selectedLanguages;
+                    // provider.locale;
+                    // provider.selectedLanguages;
                   },
                 );
               },
@@ -89,13 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   .doc(uid.phoneNumber)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting && snapshot.hasError) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    snapshot.error == snapshot.hasError) {
                   return const CircularProgressIndicator();
                 }
-                else if(snapshot.error == snapshot.hasError){
-                  return const CircularProgressIndicator();
-                }
-                else if(snapshot.hasData){
+                // else if(snapshot.error == snapshot.hasError){
+                //   return const CircularProgressIndicator();
+                // }
+                else if (snapshot.hasData) {
                   final data = snapshot.data!.data();
                   final userModel = Users.fromJson(data!);
                   return GestureDetector(
@@ -103,26 +103,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              DocumentListScreen(
-                                id: '${userModel.id}',
-                                image: '${userModel.image}',
-                                name: '${userModel.name}',
-                                email: '${userModel.email}',
-                              ),
+                          builder: (context) => DocumentListScreen(
+                            id: userModel.id,
+                            image: userModel.image!,
+                            name: userModel.name,
+                            email: userModel.email,
+                          ),
                         ),
                       );
                     },
                     child: CommonProfileView(
                       height: 100,
                       width: 100,
-                      userImage: '${userModel.image}',
-                      userName: '${userModel.name}',
-                      userEmail: '${userModel.email}',
+                      userImage: userModel.image!,
+                      userName: userModel.name,
+                      userEmail: userModel.email,
+                      widget: IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                        ),
+                        onPressed: () async{
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RegistrationScreen(editProfile: true),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   );
-                }
-                else{
+                } else {
                   return const SizedBox();
                 }
               },
@@ -145,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         final data = snapshot.data!.docs[index].data();
                         final userModel = Users.fromJson(data);
@@ -155,20 +168,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      DocumentListScreen(
-                                        id: '${userModel.id}',
-                                        image: '${userModel.image}',
-                                        name: '${userModel.name}',
-                                        email: '${userModel.email}',
-                                      ),
+                                  builder: (context) => DocumentListScreen(
+                                    id: userModel.id,
+                                    image: userModel.image!,
+                                    name: userModel.name,
+                                    email: userModel.email,
+                                  ),
                                 ),
                               );
                             },
-                            child: CommonProfileView(
-                              userImage: '${userModel.image}',
-                              userName: '${userModel.name}',
-                              userEmail: '${userModel.email}',
+                            child: AbsorbPointer(
+                              child: CommonProfileView(
+                                userImage: userModel.image!,
+                                userName: userModel.name,
+                                userEmail: userModel.email,
+                              ),
                             ),
                           ),
                         );
@@ -194,8 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                const RegistrationScreen(
+                builder: (context) => const RegistrationScreen(
                   firstProfile: false,
                 ),
               ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/profileview.dart';
 import 'package:soul_comfort/generated/l10n.dart';
-import 'package:soul_comfort/model/property.dart';
 import 'package:soul_comfort/screen/document_details/widgets/bank_account_details.dart';
 import 'package:soul_comfort/screen/document_details/widgets/bond_details.dart';
 import 'package:soul_comfort/screen/document_details/widgets/collectible_details.dart';
@@ -15,14 +14,13 @@ import 'package:soul_comfort/screen/document_details/widgets/property_details.da
 import 'package:soul_comfort/screen/document_details/widgets/provident_funds_details.dart';
 import 'package:soul_comfort/screen/document_details/widgets/trading_account_details.dart';
 
-class DocumentDetails extends StatefulWidget {
+class DocumentDetails extends StatelessWidget {
   const DocumentDetails({
     required this.id,
     required this.image,
     required this.name,
     required this.email,
     required this.title,
-    // required this.index,
     super.key,
   });
 
@@ -32,51 +30,26 @@ class DocumentDetails extends StatefulWidget {
   final String email;
   final String title;
 
-  @override
-  State<DocumentDetails> createState() => _DocumentDetailsState();
-}
-
-class _DocumentDetailsState extends State<DocumentDetails> {
-  String? titleName;
-  Widget? data;
-
-  Widget? details() {
-    // final localization = AppLocalizations.of(context);
-    switch (widget.title) {
-      case 'Bank Account':
-        data = BankAccountDetails(id: widget.id);
-      case 'Property':
-        data = PropertyDetails(id: widget.id);
-      case 'Trading Account':
-        data = TradingAccountDetails(id: widget.id);
-      case 'Other Assets':
-        data = OtherAssetsDetails(id: widget.id);
-      case 'Provident Funds':
-        data = ProvidentFundsDetails(id: widget.id);
-      case 'Locker':
-        data = LockerDetails(id: widget.id);
-      case 'Insurance':
-        data = InsuranceDetails(id: widget.id);
-      case 'Collectible':
-        data = CollectibleDetails(id: widget.id);
-      case 'Bond':
-        data = BondDetails(id: widget.id);
-      case 'P2P Landing':
-        data = P2PLandingDetails(id: widget.id);
-      case 'Privet Equity':
-        data = PrivetEquityDetails(id: widget.id);
-      default:
-        data = BankAccountDetails(id: widget.id);
-        break;
+   Widget? getDetails(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    try{
+      final map = {
+        localization.bankAccount : BankAccountDetails(id: id),
+        localization.property : PropertyDetails(id : id),
+        localization.tradingAccount : TradingAccountDetails(id: id),
+        localization.otherAssets : OtherAssetsDetails(id: id),
+        localization.providentFunds : ProvidentFundsDetails(id: id),
+        localization.locker : LockerDetails(id: id),
+        localization.insurance : InsuranceDetails(id: id),
+        localization.collectible : CollectibleDetails(id: id),
+        localization.bond : BondDetails(id: id),
+        localization.p2PLanding : P2PLandingDetails(id: id),
+        localization.privetEquity : PrivetEquityDetails(id: id),
+      };
+      return map[title]!;
+    }catch(error) {
+      print('Get Details Widget Error ------------------------- $error');
     }
-    setState(() {});
-    return data;
-  }
-
-  @override
-  void initState() {
-    details();
-    super.initState();
   }
 
   @override
@@ -86,7 +59,7 @@ class _DocumentDetailsState extends State<DocumentDetails> {
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-          '${widget.title} ${localization.details}',
+          '$title ${localization.details}',
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -98,15 +71,15 @@ class _DocumentDetailsState extends State<DocumentDetails> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: CommonProfileView(
-              userImage: widget.image,
-              userName: widget.name,
-              userEmail: widget.email,
+              userImage: image,
+              userName: name,
+              userEmail: email,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Text(
-              '${widget.title} ${localization.details}',
+              '$title ${localization.details}',
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -114,7 +87,7 @@ class _DocumentDetailsState extends State<DocumentDetails> {
             ),
           ),
           Expanded(
-            child: details()!,
+            child: getDetails(context)!,
           ),
         ],
       ),

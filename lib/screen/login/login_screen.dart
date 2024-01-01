@@ -3,9 +3,9 @@ import 'package:phone_form_field/phone_form_field.dart';
 import 'package:provider/provider.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
+import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
-import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -16,14 +16,13 @@ class LogInScreen extends StatefulWidget {
 
 class _LogInScreenState extends State<LogInScreen> {
   PhoneController phoneController = PhoneController(null);
-  var phoneNumber;
+  String? phoneNumber;
 
-  void _sendPhoneNumber(BuildContext context) {
+  Future<void> _sendPhoneNumber(BuildContext context) async{
     final authProvider = Provider.of<AuthProviders>(context, listen: false);
-    final phoneNumber = phoneController.value!;
-    authProvider.signInWithPhone(
+    await authProvider.signInWithPhone(
       context,
-      '+${phoneNumber.countryCode} ${phoneNumber.nsn}',
+      phoneController,
     );
   }
 
@@ -71,12 +70,12 @@ class _LogInScreenState extends State<LogInScreen> {
                 },
                 onChanged: (value) {
                   setState(() {
-                    phoneNumber = '+${value!.countryCode} ${value.nsn}';
+                    phoneNumber = value!.international;
                   });
                 },
                 onSaved: (value) {
                   setState(() {
-                    phoneNumber = '+${value!.countryCode} ${value.nsn}';
+                    phoneNumber = value!.international;
                   });
                 },
                 decoration: InputDecoration(
@@ -126,6 +125,7 @@ class _LogInScreenState extends State<LogInScreen> {
         child: CommonButton(
           onTap: () {
             _sendPhoneNumber(context);
+            // context.read<AuthProviders>().checkDeleteUser(phoneNumber!, context);
           },
           widget: authProvider.isLogin
               ? const Indicator(

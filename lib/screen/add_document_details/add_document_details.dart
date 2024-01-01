@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soul_comfort/app_const/colors.dart';
@@ -13,6 +13,7 @@ import 'package:soul_comfort/common_widgets/profileview.dart';
 import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 import 'package:soul_comfort/common_widgets/select_profilepic.dart';
 import 'package:soul_comfort/common_widgets/textformfield.dart';
+import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/bank_account.dart';
 import 'package:soul_comfort/model/bond.dart';
@@ -37,6 +38,7 @@ import 'package:soul_comfort/screen/add_document_details/widgets/add_privet_equi
 import 'package:soul_comfort/screen/add_document_details/widgets/add_property_details.dart';
 import 'package:soul_comfort/screen/add_document_details/widgets/add_provident_funds_details.dart';
 import 'package:soul_comfort/screen/add_document_details/widgets/add_trading_account_details.dart';
+import 'package:soul_comfort/screen/open_image/open_image_screen.dart';
 
 class AddDocumentDetails extends StatefulWidget {
   const AddDocumentDetails({
@@ -101,14 +103,13 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
 
   File? images;
   String? dataImage;
-  var url;
+  String? url;
   List<String> listImageUrl = [];
   List<File> listImage = [];
   List<String?> collectionNameList = [];
 
   final ImagePicker picker = ImagePicker();
   String id = DateTime.now().millisecondsSinceEpoch.toString();
-  final currentUser = FirebaseAuth.instance.currentUser!;
   Users? users;
   bool _isLoading = false;
   bool _isLoadingImage = false;
@@ -177,7 +178,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     url = await ref.getDownloadURL();
 
     listImageUrl.add('$url');
-
   }
 
   Future<void> _pickedPdfFile() async {
@@ -237,16 +237,16 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                   ),
                   SelectProfilePic(
                     title: localization.camera,
-                    icon: 'assets/icons/camera.png',
+                    icon: Assets.icons.camera.path,
                     onTap: _pickImageFromCamera,
                   ),
                   SelectProfilePic(
-                    icon: 'assets/icons/gallery.png',
+                    icon: Assets.icons.gallery.path,
                     title: localization.uploadFromGallery,
                     onTap: _pickImageFromGallery,
                   ),
                   SelectProfilePic(
-                    icon: 'assets/icons/doc.png',
+                    icon: Assets.icons.doc.path,
                     title: localization.document,
                     onTap: _pickedPdfFile,
                   ),
@@ -260,10 +260,13 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset(
-                  'assets/icons/cancel.png',
-                  height: 35,
-                  width: 35,
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: greenColor.withOpacity(0.2),
+                  child: const Icon(
+                    Icons.close,
+                    color: blackColor,
+                  ),
                 ),
               ),
             ),
@@ -411,26 +414,26 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
         .doc(widget.id)
         .get()
         .then((value) {
-      final collectionList = ((value.data()!['collectionList'] ?? []) as List)
-          .map((e) => e.toString())
-          .toList();
-      setState(() {
-        collectionNameList = collectionList;
-      });
-
+      if (value.data() != null) {
+        final collectionList = ((value.data()!['collectionList']) as List<String>)
+            .map((e) => e)
+            .toList();
+        setState(() {
+          collectionNameList = collectionList;
+        });
+      }
     });
-
     if (!collectionNameList.contains(collectionName[widget.index])) {
       collectionNameList.add(collectionName[widget.index]);
-
-      await FirebaseFirestore.instance.collection('document').doc(widget.id).set({
-        'id': widget.id,
-        'collectionList': collectionNameList,
-      });
     }
+    await FirebaseFirestore.instance
+        .collection('document')
+        .doc(widget.id)
+        .set({
+      'id': widget.id,
+      'collectionList': collectionNameList,
+    });
   }
-
-
 
   List<String> collectionName = [
     'Bank Account',
@@ -510,7 +513,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     ),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
@@ -529,7 +531,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CommonProfileView(
                 userImage: widget.image,
@@ -558,24 +560,31 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                   notesController.text = value!;
                 },
               ),
-              GestureDetector(
+              const SizedBox(height: 10),
+              InkWell(
                 onTap: _showModalBottomSheet,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Image.asset(
-                      'assets/icons/image.png',
-                      width: 15,
-                      height: 20,
-                      fit: BoxFit.fill,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: greenColor),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 3, right: 10),
+                          child: Icon(CupertinoIcons.cloud_upload, size: 24),
+                        ),
+                        Text(
+                          localization.uploadImages,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        localization.image,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               Padding(
@@ -598,15 +607,31 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                           //         ),
                           //         child: const Indicator(),
                           //       ) :
-                                child : AddDetailsImage(
-                                  image: listImage[index],
-                                  onTap: () {
-                                    setState(() {
-                                      listImageUrl.remove(listImageUrl[index]);
-                                      listImage.remove(listImage[index]);
-                                    });
-                                  },
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OpenImageScreen(
+                                    image: listImageUrl[index],
+                                    openPDF:
+                                        listImageUrl[index].contains('.pdf')
+                                            ? true
+                                            : false,
+                                  ),
                                 ),
+                              );
+                            },
+                            child: AddDetailsImage(
+                              image: listImage[index],
+                              onTap: () {
+                                setState(() {
+                                  listImageUrl.remove(listImageUrl[index]);
+                                  listImage.remove(listImage[index]);
+                                });
+                              },
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -637,7 +662,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                       try {
                         await submitData(saveDocumentDetails[widget.index]);
                         Navigator.pop(context);
-
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

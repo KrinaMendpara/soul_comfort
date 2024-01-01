@@ -67,5 +67,15 @@
   "pleaseEnterValidPhoneNumber" : "કૃપા કરીને માન્ય ફોન નંબર દાખલ કરો",
   "phoneNumberShouldBeOf10Digit" : "ફોન નંબર 10 અંકોનો હોવો જોઈએ",
   "bankAccountNumberShouldBe8Digits" : "બેંક એકાઉન્ટ નંબર 8 અંકનો હોવો જોઈએ",
-  "ifscCodeShouldBe10Digits" : "આઈ.એફ.એસ.સી કોડ 10 અંકોનો હોવો જોઈએ"
+  "ifscCodeShouldBe10Digits" : "આઈ.એફ.એસ.સી કોડ 10 અંકોનો હોવો જોઈએ",
+  "uploadImages" : "છબી અપલોડ કરો",
+  "editProfile" : "પ્રોફાઇલ સંપાદિત કરો",
+  "deleteMyAccount" : "મારું એકાઉન્ટ કાઢી નાખો",
+  "deleteAccount" : "એકાઉન્ટ કાઢી નાખો",
+  "areYouSureYouWantToDeleteAccount" : "શું તમે ખરેખર એકાઉન્ટ કાઢી નાખવા માંગો છો",
+  "itIsANotSame" : "તે સમાન નથી",
+  "itIsABigLength" : "તે મોટી લંબાઈ છે",
+  "enterCaptcha" : "કેપ્ચા દાખલ કરો",
+  "delete" : "કાઢી નાખો",
+  "cancel" : "રદ કરો"
 }

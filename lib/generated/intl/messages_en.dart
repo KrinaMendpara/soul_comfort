@@ -20,7 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
+  static _notInlinedMessages(_) => <String, Function> {
     "aRT" : MessageLookupByLibrary.simpleMessage("ART"),
     "accountNumber" : MessageLookupByLibrary.simpleMessage("Account Number"),
     "accountType" : MessageLookupByLibrary.simpleMessage("Account Type"),
@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addProfile" : MessageLookupByLibrary.simpleMessage("Add Profile"),
     "address" : MessageLookupByLibrary.simpleMessage("Address"),
     "age" : MessageLookupByLibrary.simpleMessage("Age"),
+    "areYouSureYouWantToDeleteAccount" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete account"),
     "bankAccount" : MessageLookupByLibrary.simpleMessage("Bank Account"),
     "bankAccountNumberShouldBe8Digits" : MessageLookupByLibrary.simpleMessage("Bank account number should be 8 digits"),
     "bankName" : MessageLookupByLibrary.simpleMessage("Bank Name"),
@@ -38,12 +39,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bondName" : MessageLookupByLibrary.simpleMessage("Bond Name"),
     "branchName" : MessageLookupByLibrary.simpleMessage("Branch Name"),
     "camera" : MessageLookupByLibrary.simpleMessage("Camera"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "chooseOption" : MessageLookupByLibrary.simpleMessage("Choose Option"),
     "collectible" : MessageLookupByLibrary.simpleMessage("Collectible"),
+    "delete" : MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteAccount" : MessageLookupByLibrary.simpleMessage("Delete Account"),
+    "deleteMyAccount" : MessageLookupByLibrary.simpleMessage("Delete My Account"),
     "details" : MessageLookupByLibrary.simpleMessage("Details"),
     "document" : MessageLookupByLibrary.simpleMessage("Document"),
     "ePF" : MessageLookupByLibrary.simpleMessage("E.P.F"),
+    "editProfile" : MessageLookupByLibrary.simpleMessage("Edit Profile"),
     "email" : MessageLookupByLibrary.simpleMessage("E-mail"),
+    "enterCaptcha" : MessageLookupByLibrary.simpleMessage("Enter Captcha"),
     "enterMobileNumber" : MessageLookupByLibrary.simpleMessage("Enter Mobile Number"),
     "enterPhoneNumber" : MessageLookupByLibrary.simpleMessage("Enter Phone Number"),
     "equityName" : MessageLookupByLibrary.simpleMessage("Equity Name"),
@@ -53,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "insurance" : MessageLookupByLibrary.simpleMessage("Insurance"),
     "insuranceName" : MessageLookupByLibrary.simpleMessage("Insurance Name"),
     "invalidEmail" : MessageLookupByLibrary.simpleMessage("Invalid Email"),
+    "itIsABigLength" : MessageLookupByLibrary.simpleMessage("it is a big length"),
+    "itIsANotSame" : MessageLookupByLibrary.simpleMessage("it is a not same"),
     "locker" : MessageLookupByLibrary.simpleMessage("Locker"),
     "lockerAddress" : MessageLookupByLibrary.simpleMessage("Locker Address"),
     "lockerName" : MessageLookupByLibrary.simpleMessage("Locker Name"),
@@ -89,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tradingAccount" : MessageLookupByLibrary.simpleMessage("Trading Account"),
     "type" : MessageLookupByLibrary.simpleMessage("Type"),
     "uploadFromGallery" : MessageLookupByLibrary.simpleMessage("Upload From Gallery"),
+    "uploadImages" : MessageLookupByLibrary.simpleMessage("Upload Images"),
     "yourPhoneNumber" : MessageLookupByLibrary.simpleMessage("Your Phone Number")
   };
 }

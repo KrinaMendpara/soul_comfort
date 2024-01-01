@@ -736,6 +736,106 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Upload Images`
+  String get uploadImages {
+    return Intl.message(
+      'Upload Images',
+      name: 'uploadImages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Profile`
+  String get editProfile {
+    return Intl.message(
+      'Edit Profile',
+      name: 'editProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete My Account`
+  String get deleteMyAccount {
+    return Intl.message(
+      'Delete My Account',
+      name: 'deleteMyAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete Account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete account`
+  String get areYouSureYouWantToDeleteAccount {
+    return Intl.message(
+      'Are you sure you want to delete account',
+      name: 'areYouSureYouWantToDeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `it is a not same`
+  String get itIsANotSame {
+    return Intl.message(
+      'it is a not same',
+      name: 'itIsANotSame',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `it is a big length`
+  String get itIsABigLength {
+    return Intl.message(
+      'it is a big length',
+      name: 'itIsABigLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Captcha`
+  String get enterCaptcha {
+    return Intl.message(
+      'Enter Captcha',
+      name: 'enterCaptcha',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

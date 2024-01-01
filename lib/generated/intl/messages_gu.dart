@@ -20,7 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'gu';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
+  static _notInlinedMessages(_) => <String, Function> {
     "aRT" : MessageLookupByLibrary.simpleMessage("એ.આર.ટી"),
     "accountNumber" : MessageLookupByLibrary.simpleMessage("ખાતા નંબર"),
     "accountType" : MessageLookupByLibrary.simpleMessage("ખાતાનો પ્રકાર"),
@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addProfile" : MessageLookupByLibrary.simpleMessage("પ્રોફાઇલ ઉમેરો"),
     "address" : MessageLookupByLibrary.simpleMessage("સરનામું"),
     "age" : MessageLookupByLibrary.simpleMessage("ઉંમર"),
+    "areYouSureYouWantToDeleteAccount" : MessageLookupByLibrary.simpleMessage("શું તમે ખરેખર એકાઉન્ટ કાઢી નાખવા માંગો છો"),
     "bankAccount" : MessageLookupByLibrary.simpleMessage("બેંક એકાઉન્ટ"),
     "bankAccountNumberShouldBe8Digits" : MessageLookupByLibrary.simpleMessage("બેંક એકાઉન્ટ નંબર 8 અંકનો હોવો જોઈએ"),
     "bankName" : MessageLookupByLibrary.simpleMessage("બેંકનું નામ"),
@@ -38,12 +39,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "bondName" : MessageLookupByLibrary.simpleMessage("બોન્ડનું નામ"),
     "branchName" : MessageLookupByLibrary.simpleMessage("શાખાનું નામ"),
     "camera" : MessageLookupByLibrary.simpleMessage("કેમેરા"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("રદ કરો"),
     "chooseOption" : MessageLookupByLibrary.simpleMessage("વિકલ્પ પસંદ કરો"),
     "collectible" : MessageLookupByLibrary.simpleMessage("એકત્ર કરવા યોગ્ય"),
+    "delete" : MessageLookupByLibrary.simpleMessage("કાઢી નાખો"),
+    "deleteAccount" : MessageLookupByLibrary.simpleMessage("એકાઉન્ટ કાઢી નાખો"),
+    "deleteMyAccount" : MessageLookupByLibrary.simpleMessage("મારું એકાઉન્ટ કાઢી નાખો"),
     "details" : MessageLookupByLibrary.simpleMessage("વિગતો"),
     "document" : MessageLookupByLibrary.simpleMessage("દસ્તાવેજ"),
     "ePF" : MessageLookupByLibrary.simpleMessage("ઇ.પી.એફ"),
+    "editProfile" : MessageLookupByLibrary.simpleMessage("પ્રોફાઇલ સંપાદિત કરો"),
     "email" : MessageLookupByLibrary.simpleMessage("ઈ-મેલ"),
+    "enterCaptcha" : MessageLookupByLibrary.simpleMessage("કેપ્ચા દાખલ કરો"),
     "enterMobileNumber" : MessageLookupByLibrary.simpleMessage("મોબાઇલ નંબર દાખલ કરો"),
     "enterPhoneNumber" : MessageLookupByLibrary.simpleMessage("ફોન નંબર દાખલ કરો"),
     "equityName" : MessageLookupByLibrary.simpleMessage("ઇક્વિટી નામ"),
@@ -53,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "insurance" : MessageLookupByLibrary.simpleMessage("વીમા"),
     "insuranceName" : MessageLookupByLibrary.simpleMessage("વીમા નામ"),
     "invalidEmail" : MessageLookupByLibrary.simpleMessage("અમાન્ય ઈમેલ"),
+    "itIsABigLength" : MessageLookupByLibrary.simpleMessage("તે મોટી લંબાઈ છે"),
+    "itIsANotSame" : MessageLookupByLibrary.simpleMessage("તે સમાન નથી"),
     "locker" : MessageLookupByLibrary.simpleMessage("લોકર"),
     "lockerAddress" : MessageLookupByLibrary.simpleMessage("લોકર સરનામું"),
     "lockerName" : MessageLookupByLibrary.simpleMessage("લોકરનું નામ"),
@@ -89,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tradingAccount" : MessageLookupByLibrary.simpleMessage("ટ્રેડિંગ એકાઉન્ટ"),
     "type" : MessageLookupByLibrary.simpleMessage("પ્રકાર"),
     "uploadFromGallery" : MessageLookupByLibrary.simpleMessage("ગેલેરીમાંથી અપલોડ કરો"),
+    "uploadImages" : MessageLookupByLibrary.simpleMessage("છબી અપલોડ કરો"),
     "yourPhoneNumber" : MessageLookupByLibrary.simpleMessage("તમારો ફોન નંબર")
   };
 }

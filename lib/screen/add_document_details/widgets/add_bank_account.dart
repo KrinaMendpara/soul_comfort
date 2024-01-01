@@ -30,18 +30,12 @@ class AddBankAccount extends StatelessWidget {
           onChanged: (value) {
             bankNameController.text = value!;
           },
-          onSaved: (value) {
-            bankNameController.text = value!;
-          },
         ),
         CommonTextFormField(
           controller: accountTypeController,
           textInputAction: TextInputAction.next,
           text: localization.accountType,
           onChanged: (value) {
-            accountTypeController.text = value!;
-          },
-          onSaved: (value) {
             accountTypeController.text = value!;
           },
         ),
@@ -52,15 +46,12 @@ class AddBankAccount extends StatelessWidget {
           validator: (value){
             if(value!.isEmpty) {
               return localization.pleaseEnterSomeText;
-            }else if(value.isNotEmpty && value!.length < 8) {
+            }else if(value.isNotEmpty && value.length < 8) {
               return localization.bankAccountNumberShouldBe8Digits;
             }
           },
           text: localization.accountNumber,
           onChanged: (value) {
-            accountNumberController.text = value!;
-          },
-          onSaved: (value) {
             accountNumberController.text = value!;
           },
         ),
@@ -78,18 +69,12 @@ class AddBankAccount extends StatelessWidget {
           onChanged: (value) {
             ifscCodeController.text = value!;
           },
-          onSaved: (value) {
-            ifscCodeController.text = value!;
-          },
         ),
         CommonTextFormField(
           controller: branchNameController,
           textInputAction: TextInputAction.next,
           text: localization.branchName,
           onChanged: (value) {
-            branchNameController.text = value!;
-          },
-          onSaved: (value) {
             branchNameController.text = value!;
           },
         ),

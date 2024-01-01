@@ -67,5 +67,15 @@
   "pleaseEnterValidPhoneNumber" : "Please Enter Valid Phone Number",
   "phoneNumberShouldBeOf10Digit" : "Phone number should be 10 digits",
   "bankAccountNumberShouldBe8Digits" : "Bank account number should be 8 digits",
-  "ifscCodeShouldBe10Digits" : "IFSC code should be 10 digits"
+  "ifscCodeShouldBe10Digits" : "IFSC code should be 10 digits",
+  "uploadImages" : "Upload Images",
+  "editProfile" : "Edit Profile",
+  "deleteMyAccount" : "Delete My Account",
+  "deleteAccount" : "Delete Account",
+  "areYouSureYouWantToDeleteAccount" : "Are you sure you want to delete account",
+  "itIsANotSame" : "it is a not same",
+  "itIsABigLength" : "it is a big length",
+  "enterCaptcha" : "Enter Captcha",
+  "delete" : "Delete",
+  "cancel" : "Cancel"
 }

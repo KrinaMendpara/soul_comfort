@@ -15,12 +15,14 @@ class CommonTextFormField extends StatelessWidget {
     this.onChanged,
     this.onSaved,
     this.validator,
+    // this.bottomPadding = 15,
     super.key,
   });
 
   final TextEditingController? controller;
   final TextInputAction textInputAction;
   final String text;
+  // final double bottomPadding;
   final IconData? icon;
   final bool showCursor;
   final bool enabled;
@@ -52,9 +54,8 @@ class CommonTextFormField extends StatelessWidget {
           }
         } : null),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          contentPadding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
           enabled: enabled,
-          isDense: true,
           label: Text(
             text,
             style: const TextStyle(

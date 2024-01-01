@@ -12,6 +12,7 @@ class FirebaseOption {
           messagingSenderId : '61284782026',
           projectId : 'soul-comfort-3d60a' ,
           storageBucket: 'soul-comfort-3d60a.appspot.com',
+          
         );
 
       case Flavor.prod :

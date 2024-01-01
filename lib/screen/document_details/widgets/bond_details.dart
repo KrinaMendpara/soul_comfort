@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/details_image.dart';
@@ -18,7 +17,6 @@ class BondDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-    final currentUser = FirebaseAuth.instance.currentUser!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),

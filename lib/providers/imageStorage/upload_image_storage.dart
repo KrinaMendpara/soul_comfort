@@ -28,7 +28,7 @@ class UploadImageStorage extends ChangeNotifier{
   }
 
   static Future<void> documentImageStorage(
-      String imagePath, String titleName, String id, url) async {
+      String imagePath, String titleName, String id, String url,) async {
 
     final ref = FirebaseStorage.instance
             .ref()
@@ -37,9 +37,9 @@ class UploadImageStorage extends ChangeNotifier{
             .child(titleName)
             .child(imagePath);
     await ref.putFile(File(imagePath));
-    url = ref.getDownloadURL();
+    url = await ref.getDownloadURL();
   }
-  static Future<void> pickImageFromCamera(File images, listImage, url, String titleName, String id) async {
+  static Future<void> pickImageFromCamera(File images, List listImage, String url, String titleName, String id) async {
 
     final pickedImageFile = await picker
         .pickImage(

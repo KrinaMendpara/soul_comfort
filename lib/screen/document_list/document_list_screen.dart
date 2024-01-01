@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/common_widgets/profileview.dart';
+import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/screen/add_document/add_document_screen.dart';
 import 'package:soul_comfort/screen/document_details/document_details.dart';
@@ -26,20 +27,30 @@ class DocumentListScreen extends StatefulWidget {
 }
 
 class _DocumentListScreenState extends State<DocumentListScreen> {
-  List<String> collectionList = [];
-  final documentImage = <String>[
-    'assets/images/bank.png',
-    'assets/images/property.png',
-    'assets/images/Trading_icon.png',
-    'assets/images/other assets.webp',
-    'assets/images/Provident Funds 2.png',
-    'assets/images/Locker_icon.png',
-    'assets/images/Insurance_icon.png',
-    'assets/images/Collectible.png',
-    'assets/images/Bond.webp',
-    'assets/images/P2P Landing 2.png',
-    'assets/images/Private Equity 1.png',
-  ];
+  
+  String getImage(String name) {
+    final localization = AppLocalizations.of(context);
+    try{
+      final map = {
+        localization.bankAccount : Assets.images.bank.path,
+        localization.property : Assets.images.property.path,
+        localization.tradingAccount : Assets.images.tradingIcon.path,
+        localization.otherAssets : Assets.images.otherAssets.path,
+        localization.providentFunds : Assets.images.providentFunds.path,
+        localization.locker : Assets.images.lockerIcon.path,
+        localization.insurance : Assets.images.insuranceIcon.path,
+        localization.collectible : Assets.images.collectible.path,
+        localization.bond : Assets.images.bond.path,
+        localization.p2PLanding : Assets.images.p2PLanding.path,
+        localization.privetEquity : Assets.images.privateEquity.path,
+      };
+      return map[name]!;
+
+    }catch(error) {
+      print('error ------------------------- $error');
+      return name;
+    }
+  }
 
   String getTranslation(String name) {
     final localization = AppLocalizations.of(context);
@@ -58,10 +69,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         'Privet Equity' : localization.privetEquity,
       };
       return map[name]!;
-
     }catch(error) {
-
-      print('error ------------------------- $error');
       return name;
     }
   }
@@ -73,32 +81,31 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CommonProfileView(
-                userImage: widget.image,
-                userName: widget.name,
-                userEmail: widget.email,
-              ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: CommonProfileView(
+              userImage: widget.image,
+              userName: widget.name,
+              userEmail: widget.email,
             ),
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('document')
-                  .doc(widget.id)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasData) {
-                  if (snapshot.data!.data() != null) {
-                    final data =
-                        snapshot.data!.data()!['collectionList'] as List;
-                    return GridView.builder(
+          ),
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('document')
+                .doc(widget.id)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                if (snapshot.data!.data() != null) {
+                  final data =
+                      snapshot.data!.data()!['collectionList'] as List;
+                  return Expanded(
+                    child: GridView.builder(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -108,6 +115,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (ctx, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -150,7 +158,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Image.asset(
-                                    documentImage[index],
+                                    getImage(getTranslation('${data[index]!}')),
                                     height: 90,
                                     width: 90,
                                     fit: BoxFit.fill,
@@ -168,20 +176,21 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                           ),
                         );
                       },
-                    );
-                  } else {
-                    return const Text('No data');
-                  }
+                    ),
+                  );
                 } else {
-                  return const SizedBox();
+                  return const Text('No data');
                 }
-              },
-            ),
-            const SizedBox(
-              height: 90,
-            ),
-          ],
-        ),
+              }
+              else{
+                return const SizedBox();
+              }
+            },
+          ),
+          const SizedBox(
+            height: 90,
+          ),
+        ],
       ),
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),

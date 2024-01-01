@@ -67,5 +67,15 @@
   "pleaseEnterValidPhoneNumber" : "कृपया एक वैध नंबर डालें",
   "phoneNumberShouldBeOf10Digit" : "फ़ोन नंबर 10 अंको का होना चाहिए",
   "bankAccountNumberShouldBe8Digits" : "बैंक खाता नंबर 8 अंको का होना चाहिए",
-  "ifscCodeShouldBe10Digits" : "आई.एफ.एस.सी कोड 10 अंकों का होना चाहिए"
+  "ifscCodeShouldBe10Digits" : "आई.एफ.एस.सी कोड 10 अंकों का होना चाहिए",
+  "uploadImages" : "तस्विर अपलोड करो",
+  "editProfile" : "प्रोफ़ाइल संपादित करें",
+  "deleteMyAccount" : "मेरा एकाउंट हटा दो",
+  "deleteAccount" : "खाता हटा दो ",
+  "areYouSureYouWantToDeleteAccount" : "क्या आप वाकई खाता हटाना चाहते हैं?",
+  "itIsANotSame" : "यह वैसा नहीं है",
+  "itIsABigLength" : "यह एक बड़ी लंबाई है",
+  "enterCaptcha" : "केप्चा भरे",
+  "delete" : "हटाना",
+  "cancel" : "रद्द करना"
 }

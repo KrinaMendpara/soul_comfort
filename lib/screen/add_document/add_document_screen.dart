@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/profileview.dart';
+import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/screen/add_document_details/add_document_details.dart';
 
@@ -42,7 +43,6 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
       localization.p2PLanding,
       localization.privetEquity,
     ];
-
 
     return Scaffold(
       backgroundColor: whiteColor,
@@ -87,53 +87,53 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                       ),
                     ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: greenColor.withOpacity(0.1),
-                        child: Image.asset(
-                          'assets/icons/document.png',
-                          height: 16,
-                          width: 14,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            documentList[index],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddDocumentDetails(
+                            id: widget.id,
+                            titleName: documentList[index],
+                            image: widget.image,
+                            name: widget.name,
+                            email: widget.email,
+                            index: index,
                           ),
                         ),
-                      ),
-                      CircleAvatar(
-                        backgroundColor: greenColor.withOpacity(0.1),
-                        child: Center(
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: greenColor,
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: greenColor.withOpacity(0.1),
+                          child: Image.asset(
+                            Assets.icons.document.path,
+                            height: 16,
+                            width: 14,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              documentList[index],
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddDocumentDetails(
-                                    id: widget.id,
-                                    titleName: documentList[index],
-                                    image: widget.image,
-                                    name: widget.name,
-                                    email: widget.email,
-                                    index: index,
-                                  ),
-                                ),
-                              );
-                            },
                           ),
                         ),
-                      ),
-                    ],
+                        CircleAvatar(
+                          backgroundColor: greenColor.withOpacity(0.1),
+                          child: const Center(
+                            child: Icon(
+                                Icons.add,
+                                color: greenColor,
+                              ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

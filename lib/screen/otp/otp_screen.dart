@@ -1,22 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
+import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
-import 'package:soul_comfort/common_widgets/progress_indicator.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({
     required this.verificationId,
     required this.phoneNumber,
+    required this.phoneController,
     super.key,
   });
 
   final String verificationId;
+  final PhoneController phoneController;
   final String phoneNumber;
 
   @override
@@ -158,11 +161,10 @@ class _OtpScreenState extends State<OtpScreen> {
               onPressed: second != 0
                   ? null
                   : () {
-                      final phoneNumber = widget.phoneNumber;
 
                       authProvider.signInWithPhone(
                         context,
-                        phoneNumber,
+                        widget.phoneController,
                       );
                       setState(() {
                         enableResend = false;
