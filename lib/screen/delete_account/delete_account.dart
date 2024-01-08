@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,14 +9,16 @@ import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/providers/auth/auth_provider.dart';
+import 'package:soul_comfort/screen/home/home_screen.dart';
 import 'package:soul_comfort/screen/login/login_screen.dart';
 
 void deleteUserAccount({
   required BuildContext context,
-  required String imageUrl,
+  required String? imageUrl,
   required String userName,
   required String userEmail,
-  // required bool isDeleteUsers,
+  String? userId,
+  bool firstProfile = true,
 }) {
   showModalBottomSheet<void>(
     backgroundColor: whiteColor,
@@ -31,7 +35,8 @@ void deleteUserAccount({
         imageUrl: imageUrl,
         userName: userName,
         userEmail: userEmail,
-        // isDeleteUser: isDeleteUsers,
+        firstProfile: firstProfile,
+        userId: userId,
       );
     },
   );
@@ -56,14 +61,16 @@ class DeleteAccount extends StatefulWidget {
     required this.userName,
     required this.userEmail,
     required this.imageUrl,
-    // this.isDeleteUser = false,
+    this.firstProfile = true,
     super.key,
+    this.userId,
   });
 
-  final String imageUrl;
+  final String? imageUrl;
   final String userName;
   final String userEmail;
-  // final bool isDeleteUser;
+  final bool firstProfile;
+  final String? userId;
 
   @override
   State<DeleteAccount> createState() => _DeleteAccountState();
@@ -129,26 +136,22 @@ class _DeleteAccountState extends State<DeleteAccount> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    radius: 24,
-                    child: (widget.imageUrl.isEmpty )
-                        ? Padding(
-                            padding: const EdgeInsets.all(8),
-                            child:
-                                Image.asset(Assets.images.profilePicture.path),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  widget.imageUrl,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: (widget.imageUrl != null)
+                            ? NetworkImage(
+                                widget.imageUrl!,
+                              )
+                            : AssetImage(
+                                Assets.images.profilePicture.path,
+                              ) as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -157,6 +160,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     children: [
                       Text(
                         widget.userName,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -165,6 +169,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                       ),
                       Text(
                         widget.userEmail,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 16,
                           color: blackColor,
@@ -189,8 +194,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Colors.grey.shade300,
-                      // color: greenColor.withOpacity(0.3),
+                      color: cloudyGreyColor.withOpacity(0.3),
                     ),
                     child: Text(
                       captcha,
@@ -239,7 +243,6 @@ class _DeleteAccountState extends State<DeleteAccount> {
                             ),
                             borderSide: BorderSide(
                               width: 1.5,
-                              color: blackColor,
                             ),
                           ),
                           focusedBorder: const OutlineInputBorder(
@@ -257,7 +260,6 @@ class _DeleteAccountState extends State<DeleteAccount> {
                             ),
                             borderSide: BorderSide(
                               width: 1.5,
-                              color: blackColor,
                             ),
                           ),
                           contentPadding: EdgeInsets.zero,
@@ -296,19 +298,41 @@ class _DeleteAccountState extends State<DeleteAccount> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     isDelete = true;
                   });
                   if (captchaController.text.isNotEmpty) {
                     if (formKey.currentState!.validate()) {
-                      context.read<AuthProviders>().checkDeleteUser();
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute<void>(
-                          builder: (context) => const LogInScreen(),
-                        ),
-                        (route) => false,
-                      );
+                      if (widget.firstProfile) {
+                        await context.read<AuthProviders>().checkDeleteUser();
+                        await Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute<void>(
+                            builder: (context) => const LogInScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      } else {
+                        final currentUser = FirebaseAuth.instance.currentUser;
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(currentUser!.uid)
+                            .collection('userData')
+                            .doc(currentUser.phoneNumber)
+                            .collection('other Profile')
+                            .doc(widget.userId)
+                            .delete();
+                        await FirebaseFirestore.instance
+                            .collection('document')
+                            .doc(widget.userId)
+                            .delete();
+                        await Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute<void>(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      }
                     }
                   }
                 },
@@ -333,11 +357,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
                   ),
                 ),
                 onPressed: () {
+                  Navigator.pop(context);
                   setState(() {
-                    Navigator.pop(context);
-                    setState(() {
-                      isDelete = false;
-                    });
+                    isDelete = false;
                   });
                 },
               ),

@@ -19,7 +19,7 @@ class AddP2PLandingDetails extends StatelessWidget {
         CommonTextFormField(
           controller: p2pLandingNameController,
           textInputAction: TextInputAction.next,
-          text: localization.p2PLanding,
+          text: '${localization.p2PLanding}*',
           onChanged: (value) {
             p2pLandingNameController.text = value!;
           },

@@ -34,6 +34,7 @@ class BondDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final bonds = Bonds.fromJson(data);
@@ -41,11 +42,11 @@ class BondDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.bondName,
-                      value: bonds.bondName!,
+                      value: bonds.bondName,
                     ),
                     DetailsText(
                       name: localization.bondDetails,
-                      value: bonds.bondDetails!,
+                      value: bonds.bondDetails,
                     ),
                     if (bonds.notes!.isNotEmpty)
                       DetailsText(

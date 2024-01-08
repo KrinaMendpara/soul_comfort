@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
+import 'package:soul_comfort/generated/l10n.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class OpenImageScreen extends StatelessWidget {
@@ -14,11 +16,12 @@ class OpenImageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
         title: Text(
-          openPDF ? 'PDF' : 'Image',
+          openPDF ? localization.pdf : localization.image,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -37,7 +40,7 @@ class OpenImageScreen extends StatelessWidget {
                       content: Text(value.description),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('OK'),
+                          child: Text(localization.ok),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -48,7 +51,21 @@ class OpenImageScreen extends StatelessWidget {
                 );
               },
             )
-          : Center(child: Image.network(image)),
+          // : Center(child: Image.network(image)),
+       : Center(
+         child: CachedNetworkImage(
+           imageUrl: image,
+           fit: BoxFit.contain,
+           progressIndicatorBuilder: (context, url, progress) {
+             return Center(
+               child: CircularProgressIndicator(
+                 value: progress.progress,
+                 color: greenColor,
+               ),
+             );
+           },
+         ),
+       ),
     );
   }
 }

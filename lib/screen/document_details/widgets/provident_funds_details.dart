@@ -21,10 +21,10 @@ class ProvidentFundsDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
-                .collection('document')
-                .doc(id)
-                .collection('Provident Funds')
-                .snapshots(),
+            .collection('document')
+            .doc(id)
+            .collection('Provident Funds')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -33,6 +33,7 @@ class ProvidentFundsDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final providentFunds = ProvidentFunds.fromJson(data);
@@ -46,6 +47,10 @@ class ProvidentFundsDetails extends StatelessWidget {
                       name: localization.pPF,
                       value: providentFunds.ppfName!,
                     ),
+                    DetailsText(
+                      name: localization.uAN,
+                      value: providentFunds.uanName!,
+                    ),
                     if (providentFunds.notes!.isNotEmpty)
                       DetailsText(
                         name: localization.notes,
@@ -55,7 +60,6 @@ class ProvidentFundsDetails extends StatelessWidget {
                       const SizedBox(),
                     DetailsImageList(
                       imageList: providentFunds.images ?? [],
-
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),

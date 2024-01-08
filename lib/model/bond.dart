@@ -1,8 +1,8 @@
 class Bonds {
   Bonds({
-    this.id,
-    this.bondName,
-    this.bondDetails,
+    required this.id,
+    required this.bondName,
+    required this.bondDetails,
     this.images,
     this.notes,
   });
@@ -17,9 +17,9 @@ class Bonds {
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
-  String? id;
-  String? bondName;
-  String? bondDetails;
+  String id;
+  String bondName;
+  String bondDetails;
   List<String>? images;
   String? notes;
 

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "61284782026",
-    "project_id": "soul-comfort-3d60a",
-    "storage_bucket": "soul-comfort-3d60a.appspot.com"
+    "project_number": "1096908237548",
+    "project_id": "soul-comfort-9336f",
+    "storage_bucket": "soul-comfort-9336f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:61284782026:android:a3e0949d75f4ea9eb04933",
+        "mobilesdk_app_id": "1:1096908237548:android:167b246e4ecc3302ff93c9",
         "android_client_info": {
           "package_name": "com.example.soul_comfort"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAhGBaXD2KLcc5mKCJCG1x-Hx8BHVGp3HE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:61284782026:android:16d0c3693d1c5f91b04933",
-        "android_client_info": {
-          "package_name": "com.example.soul_comfort.dev"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAhGBaXD2KLcc5mKCJCG1x-Hx8BHVGp3HE"
+          "current_key": "AIzaSyA1v1Si1x6PSyg4izPgy3kAoROKnudqYEc"
         }
       ],
       "services": {

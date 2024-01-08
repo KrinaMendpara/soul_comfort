@@ -35,6 +35,7 @@ class OtherAssetsDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final otherAssets = OtherAssets.fromJson(data);
@@ -42,11 +43,11 @@ class OtherAssetsDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.type,
-                      value: otherAssets.name!,
+                      value: otherAssets.name,
                     ),
                     DetailsText(
                       name: localization.details,
-                      value: otherAssets.details!,
+                      value: otherAssets.details,
                     ),
                     if (otherAssets.notes!.isNotEmpty)
                       DetailsText(

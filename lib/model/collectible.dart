@@ -1,6 +1,6 @@
 class Collectible {
   Collectible({
-    this.id,
+    required this.id,
     this.art,
     this.nft,
     this.notes,
@@ -17,7 +17,7 @@ class Collectible {
         notes: json['notes'] == null ? null : json['notes'] as String,
       );
 
-  String? id;
+  String id;
   String? art;
   String? nft;
   List<String>? images;

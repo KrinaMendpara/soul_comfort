@@ -16,7 +16,7 @@ class AddBondDetails extends StatelessWidget {
         CommonTextFormField(
           controller: bondNameController,
           textInputAction: TextInputAction.next,
-          text: localization.bondName,
+          text: '${localization.bondName}*',
           onChanged: (value) {
             bondNameController.text = value!;
           },
@@ -24,7 +24,7 @@ class AddBondDetails extends StatelessWidget {
         CommonTextFormField(
           controller: bondDetailsController,
           textInputAction: TextInputAction.next,
-          text: localization.bondDetails,
+          text: '${localization.bondDetails}*',
           onChanged: (value) {
             bondDetailsController.text = value!;
           },

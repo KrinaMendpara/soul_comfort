@@ -22,7 +22,6 @@ class CommonTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputAction textInputAction;
   final String text;
-  // final double bottomPadding;
   final IconData? icon;
   final bool showCursor;
   final bool enabled;
@@ -76,21 +75,12 @@ class CommonTextFormField extends StatelessWidget {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3),
-            borderSide: const BorderSide(
-              color: blackColor,
-            ),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3),
-            borderSide: const BorderSide(
-              color: blackColor,
-            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3),
-            borderSide: const BorderSide(
-              color: blackColor,
-            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3),

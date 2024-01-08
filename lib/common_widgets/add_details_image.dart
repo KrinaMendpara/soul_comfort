@@ -1,6 +1,5 @@
 
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/gen/assets.gen.dart';
@@ -12,7 +11,7 @@ class AddDetailsImage extends StatelessWidget {
     super.key,
   });
 
-  final File? image;
+  final String? image;
   final void Function()? onTap;
 
   @override
@@ -22,34 +21,57 @@ class AddDetailsImage extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              border: image!.path.contains('.jpg') ? null :  Border.all(
-                color: blackColor,
+          if (image!.contains('.jpg'))
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                color: greenColor.withOpacity(0.1),
+                shape: BoxShape.circle,
               ),
-              color: greenColor.withOpacity(0.1),
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: image!.path.contains('.jpg')
-                    ? FileImage(
-                  image!,
-                ): AssetImage(
-                        Assets.images.pdf.path,
-                      ) as ImageProvider,
+              child: CachedNetworkImage(
+                imageUrl: image!,
+                fit: BoxFit.fill,
+                progressIndicatorBuilder: (context, url, progress) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: progress.progress,
+                      color: greenColor,
+                    ),
+                  );
+                },
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: greenColor.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: imageProvider,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          else
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: blackColor,
+                ),
+                color: greenColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                    Assets.images.pdf.path,
+                  ),
+                ),
               ),
             ),
-            // child: isLoadingImage ? Indicator() : ((image!.contains('.jpg'))
-            //     ? Image.network(
-            //   image!,
-            //   fit: BoxFit.fill,
-            // ) : Image.asset(
-            //   'assets/images/Pdf.jpg',
-            //   fit: BoxFit.fill,
-            // )),
-          ),
           Positioned(
             right: 5,
             top: -6,

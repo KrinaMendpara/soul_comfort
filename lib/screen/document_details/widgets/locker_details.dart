@@ -34,6 +34,7 @@ class LockerDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final locker = Locker.fromJson(data);
@@ -41,11 +42,15 @@ class LockerDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.name,
-                      value: locker.lockerName!,
+                      value: locker.lockerName,
                     ),
                     DetailsText(
                       name: localization.address,
-                      value: locker.lockerAddress!,
+                      value: locker.lockerAddress,
+                    ),
+                    DetailsText(
+                      name: localization.pinCode,
+                      value: locker.pinCode,
                     ),
                     if (locker.notes!.isNotEmpty)
                       DetailsText(

@@ -15,7 +15,7 @@ class AddTradingAccountDetails extends StatelessWidget {
         CommonTextFormField(
           controller: stockController,
           textInputAction: TextInputAction.next,
-          text: localization.stock,
+          text: '${localization.stock}*',
           onChanged: (value) {
             stockController.text = value!;
           },
@@ -23,7 +23,7 @@ class AddTradingAccountDetails extends StatelessWidget {
         CommonTextFormField(
           controller: mutualFundsController,
           textInputAction: TextInputAction.next,
-          text: localization.mutualFunds,
+          text: '${localization.mutualFunds}*',
           onChanged: (value) {
             mutualFundsController.text = value!;
           },

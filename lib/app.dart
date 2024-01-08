@@ -26,6 +26,7 @@ class App extends StatelessWidget {
             focusColor: Colors.transparent,
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
             appBarTheme: const AppBarTheme(
               backgroundColor: whiteColor,
               elevation: 0,

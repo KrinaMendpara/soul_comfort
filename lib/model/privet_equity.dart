@@ -1,7 +1,7 @@
 class PrivetEquity {
   PrivetEquity({
-    this.id,
-    this.equityName,
+    required this.id,
+    required this.equityName,
     this.others,
     this.images,
     this.notes,
@@ -17,8 +17,8 @@ class PrivetEquity {
             : List<String>.from(json['images'] as List),
       );
 
-  String? id;
-  String? equityName;
+  String id;
+  String equityName;
   String? others;
   List<String>? images;
   String? notes;

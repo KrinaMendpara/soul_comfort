@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/progress_indicator.dart';
+import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/screen/open_image/open_image_screen.dart';
 
 class DetailsImageList extends StatelessWidget {
@@ -59,24 +62,16 @@ class DetailsImageList extends StatelessWidget {
                                       topLeft: Radius.circular(5),
                                       topRight: Radius.circular(5),
                                     ),
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5),
-                                          topRight: Radius.circular(5),
-                                        ),
-                                      ),
-                                      child: const PDF(
-                                        enableSwipe: false,
-                                        autoSpacing: false,
-                                      ).cachedFromUrl(
-                                        imageList![index]!,
-                                      ),
+                                    child: const PDF(
+                                      enableSwipe: false,
+                                      autoSpacing: false,
+                                    ).cachedFromUrl(
+                                      imageList![index]!,
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 5),
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
                                       bottomLeft: Radius.circular(10),
@@ -90,7 +85,7 @@ class DetailsImageList extends StatelessWidget {
                                         height: 30,
                                         width: 30,
                                         child: Image.asset(
-                                          'assets/icons/pdf_icon.png',
+                                          Assets.icons.pdfIcon.path,
                                         ),
                                       ),
                                       Expanded(
@@ -99,9 +94,6 @@ class DetailsImageList extends StatelessWidget {
                                               const EdgeInsets.only(left: 10),
                                           child: Text(
                                             pathSegments,
-                                            // style: const TextStyle(
-                                            //   color: whiteColor,
-                                            // ),
                                           ),
                                         ),
                                       ),
@@ -118,12 +110,18 @@ class DetailsImageList extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(
-                                imageList![index]!,
-                              ),
-                            ),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: imageList![index]!,
+                            fit: BoxFit.contain,
+                            progressIndicatorBuilder: (context, url, progress) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: progress.progress,
+                                  color: greenColor,
+                                ),
+                              );
+                            },
                           ),
                         ),
                 ),

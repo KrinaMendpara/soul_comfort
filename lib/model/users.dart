@@ -5,8 +5,9 @@ class Users {
     required this.name,
     required this.email,
     required this.address,
-    required this.age,
+    required this.panCard,
     required this.birthDate,
+    required this.pinCode,
     this.isDeleteUser = false,
     this.phoneNumber,
     this.relation,
@@ -17,8 +18,9 @@ class Users {
         image: json['image'] == null ? null : json['image'] as String,
         name: json['name'].toString(),
         email: json['email'].toString(),
+        pinCode: json['pinCode'].toString(),
         address: json['address'].toString(),
-        age: json['age'].toString(),
+    panCard: json['panCard'].toString(),
         birthDate: json['birthDate'].toString(),
         isDeleteUser:
             json['isDeleteUser'] as bool,
@@ -30,11 +32,12 @@ class Users {
   String id;
   String? image;
   String name;
+  String pinCode;
   String address;
   String email;
   String? relation;
   String? phoneNumber;
-  String age;
+  String panCard;
   String birthDate;
   bool isDeleteUser;
 
@@ -42,9 +45,10 @@ class Users {
         'id': id,
         'image': image == null ? null : image,
         'name': name,
+        'pinCode' : pinCode,
         'email': email,
         'address': address,
-        'age': age,
+        'panCard': panCard,
         'birthDate': birthDate,
         'isDeleteUser': isDeleteUser,
         'relation': relation == null ? null : relation,

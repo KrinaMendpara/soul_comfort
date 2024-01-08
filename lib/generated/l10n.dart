@@ -207,21 +207,21 @@ class AppLocalizations {
     );
   }
 
-  /// `Age`
-  String get age {
+  /// `Pan Card Number`
+  String get panCardNumber {
     return Intl.message(
-      'Age',
-      name: 'age',
+      'Pan Card Number',
+      name: 'panCardNumber',
       desc: '',
       args: [],
     );
   }
 
-  /// `BirthDate`
-  String get birthDate {
+  /// `Date Of Birth`
+  String get dateOfBirth {
     return Intl.message(
-      'BirthDate',
-      name: 'birthDate',
+      'Date Of Birth',
+      name: 'dateOfBirth',
       desc: '',
       args: [],
     );
@@ -667,11 +667,41 @@ class AppLocalizations {
     );
   }
 
+  /// `PDF`
+  String get pdf {
+    return Intl.message(
+      'PDF',
+      name: 'pdf',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message(
+      'OK',
+      name: 'ok',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please enter some text`
   String get pleaseEnterSomeText {
     return Intl.message(
       'Please enter some text',
       name: 'pleaseEnterSomeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter some number`
+  String get pleaseEnterSomeNumber {
+    return Intl.message(
+      'Please enter some number',
+      name: 'pleaseEnterSomeNumber',
       desc: '',
       args: [],
     );
@@ -767,6 +797,26 @@ class AppLocalizations {
     );
   }
 
+  /// `Delete This Account`
+  String get deleteThisAccount {
+    return Intl.message(
+      'Delete This Account',
+      name: 'deleteThisAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select account type`
+  String get pleaseSelectAccountType {
+    return Intl.message(
+      'Please select account type',
+      name: 'pleaseSelectAccountType',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Delete Account`
   String get deleteAccount {
     return Intl.message(
@@ -832,6 +882,186 @@ class AppLocalizations {
     return Intl.message(
       'Cancel',
       name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter valid pan card number`
+  String get pleaseEnterValidPanCardNumber {
+    return Intl.message(
+      'Please enter valid pan card number',
+      name: 'pleaseEnterValidPanCardNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pan card number should be of 10 Digit`
+  String get panCardNumberShouldBeOf10Digit {
+    return Intl.message(
+      'Pan card number should be of 10 Digit',
+      name: 'panCardNumberShouldBeOf10Digit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin Code`
+  String get pinCode {
+    return Intl.message(
+      'Pin Code',
+      name: 'pinCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter pinCode number`
+  String get pleaseEnterPinCodeNumber {
+    return Intl.message(
+      'Please enter pinCode number',
+      name: 'pleaseEnterPinCodeNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter valid pin code number`
+  String get pleaseEnterValidPinCodeNumber {
+    return Intl.message(
+      'Please enter valid pin code number',
+      name: 'pleaseEnterValidPinCodeNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pin code number should be of 6 digit`
+  String get pinCodeNumberShouldBeOf6Digit {
+    return Intl.message(
+      'Pin code number should be of 6 digit',
+      name: 'pinCodeNumberShouldBeOf6Digit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Percentage`
+  String get percentage {
+    return Intl.message(
+      'Percentage',
+      name: 'percentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Partial Owner`
+  String get partialOwner {
+    return Intl.message(
+      'Partial Owner',
+      name: 'partialOwner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Half Owner`
+  String get halfOwner {
+    return Intl.message(
+      'Half Owner',
+      name: 'halfOwner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Owner`
+  String get fullOwner {
+    return Intl.message(
+      'Full Owner',
+      name: 'fullOwner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter percentage`
+  String get pleaseEnterPercentage {
+    return Intl.message(
+      'Please enter percentage',
+      name: 'pleaseEnterPercentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `U.A.N`
+  String get uAN {
+    return Intl.message(
+      'U.A.N',
+      name: 'uAN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Percentage of ownership`
+  String get percentageOfOwnership {
+    return Intl.message(
+      'Percentage of ownership',
+      name: 'percentageOfOwnership',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving Account`
+  String get savingAccount {
+    return Intl.message(
+      'Saving Account',
+      name: 'savingAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Account`
+  String get currentAccount {
+    return Intl.message(
+      'Current Account',
+      name: 'currentAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fixed Deposit Account`
+  String get fixedDepositAccount {
+    return Intl.message(
+      'Fixed Deposit Account',
+      name: 'fixedDepositAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal Information`
+  String get personalInformation {
+    return Intl.message(
+      'Personal Information',
+      name: 'personalInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Information`
+  String get contactInformation {
+    return Intl.message(
+      'Contact Information',
+      name: 'contactInformation',
       desc: '',
       args: [],
     );

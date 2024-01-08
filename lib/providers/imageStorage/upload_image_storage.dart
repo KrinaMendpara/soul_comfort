@@ -8,9 +8,8 @@ import 'package:image_picker/image_picker.dart';
 class UploadImageStorage extends ChangeNotifier{
 
   static ImagePicker picker = ImagePicker();
-  static bool _isLoadingImage = false;
 
-  static Future<void> imageStorage(String imagePath, bool firstProfile) async {
+  static Future<void> imageStorage(String imagePath, bool firstProfile, String url ) async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     final ref = (firstProfile == true)
@@ -25,6 +24,7 @@ class UploadImageStorage extends ChangeNotifier{
             .child('Other_Profile_Image')
             .child(imagePath);
     await ref.putFile(File(imagePath));
+    url = await ref.getDownloadURL();
   }
 
   static Future<void> documentImageStorage(
@@ -32,31 +32,11 @@ class UploadImageStorage extends ChangeNotifier{
 
     final ref = FirebaseStorage.instance
             .ref()
-            .child('documentimage')
+            .child('documentImage')
             .child(id)
             .child(titleName)
             .child(imagePath);
     await ref.putFile(File(imagePath));
     url = await ref.getDownloadURL();
-  }
-  static Future<void> pickImageFromCamera(File images, List listImage, String url, String titleName, String id) async {
-
-    final pickedImageFile = await picker
-        .pickImage(
-      source: ImageSource.camera,
-    )
-        .whenComplete(() {
-        _isLoadingImage = true;
-    });
-
-    images = File(pickedImageFile!.path);
-    final dataImage = pickedImageFile.path.split('/').last;
-    // Navigator.pop(context);
-    await documentImageStorage(dataImage, titleName,id, url);
-    listImage.add(images);
-      _isLoadingImage = false;
-
-
-    // listImageUrl.add('$url');
   }
 }

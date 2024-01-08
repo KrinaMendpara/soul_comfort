@@ -33,6 +33,7 @@ class InsuranceDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final insurance = Insurance.fromJson(data);
@@ -40,11 +41,11 @@ class InsuranceDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.insuranceName,
-                      value: insurance.insuranceName!,
+                      value: insurance.insuranceName,
                     ),
                     DetailsText(
                       name: localization.other,
-                      value: insurance.other!,
+                      value: insurance.other,
                     ),
                     if (insurance.notes!.isNotEmpty)
                       DetailsText(

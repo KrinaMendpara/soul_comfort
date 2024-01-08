@@ -34,6 +34,7 @@ class BankAccountDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data?.docs[index].data();
                 final bankAccount = BankAccount.fromJson(data!);
@@ -41,23 +42,23 @@ class BankAccountDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.bankName,
-                      value: bankAccount.bankName!,
+                      value: bankAccount.bankName,
                     ),
                     DetailsText(
                       name: localization.accountNumber,
-                      value: bankAccount.accountNumber!,
+                      value: bankAccount.accountNumber,
                     ),
                     DetailsText(
                       name: localization.iFSCCode,
-                      value: bankAccount.ifscCode!,
+                      value: bankAccount.ifscCode,
                     ),
                     DetailsText(
                       name: localization.accountType,
-                      value: bankAccount.accountType!,
+                      value: bankAccount.accountType,
                     ),
                     DetailsText(
                       name: localization.branchName,
-                      value: bankAccount.branchName!,
+                      value: bankAccount.branchName,
                     ),
                     if (bankAccount.notes!.isNotEmpty)
                       DetailsText(

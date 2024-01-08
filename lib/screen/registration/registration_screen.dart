@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/common_widgets/button.dart';
 import 'package:soul_comfort/common_widgets/select_profilepic.dart';
-import 'package:soul_comfort/common_widgets/textformfield.dart';
 import 'package:soul_comfort/gen/assets.gen.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 import 'package:soul_comfort/model/users.dart';
@@ -23,11 +23,13 @@ class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({
     this.firstProfile = true,
     this.editProfile = false,
+    this.userId,
     super.key,
   });
 
   final bool firstProfile;
   final bool editProfile;
+  final String? userId;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -38,8 +40,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
+  TextEditingController panCardController = TextEditingController();
   TextEditingController relationController = TextEditingController();
   TextEditingController birthDateController = TextEditingController();
 
@@ -59,9 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
 
     Navigator.pop(context);
-    setState(() {
-      image = pickedImageFile!.path;
-    });
+    image = pickedImageFile!.path;
 
     final ref = (widget.firstProfile)
         ? FirebaseStorage.instance
@@ -77,6 +78,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     await ref.putFile(File(image!)).whenComplete(() => null);
 
     url = await ref.getDownloadURL();
+    setState(() {});
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -84,12 +86,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       source: ImageSource.gallery,
     );
     Navigator.pop(context);
-    setState(() {
-      image = pickedImageFile!.path;
-    });
+    image = pickedImageFile!.path;
 
-    final dataImage = pickedImageFile!.path.split('/').last;
-    // await UploadImageStorage.imageStorage(image!, widget.firstProfile);
+
+    final dataImage = pickedImageFile.path.split('/').last;
+    // await UploadImageStorage.imageStorage(dataImage, widget.firstProfile, url!);
     final ref = (widget.firstProfile)
         ? FirebaseStorage.instance
             .ref()
@@ -105,14 +106,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     await ref.putFile(File(image!));
 
     url = await ref.getDownloadURL();
-
+    setState(() {});
   }
 
   Future<void> _removeProfilePicture() async {
-    Navigator.pop(context);
     setState(() {
       image = null;
+      url = null;
     });
+    Navigator.pop(context);
   }
 
   Future<void> _showModalBottomSheet() {
@@ -197,12 +199,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final users = Users(
       id: widget.firstProfile ? currentUser!.uid : id,
       name: nameController.text,
-      image: '$url',
+      image: url,
+      pinCode: pinCodeController.text,
       address: addressController.text,
       email: emailController.text,
-      age: ageController.text,
+      panCard: panCardController.text,
       birthDate: birthDateController.text,
-      phoneNumber: currentUser!.phoneNumber,
+      phoneNumber: phoneNumberController.text,
       relation: relationController.text,
       isDeleteUser: _isDeleteUser,
     );
@@ -247,47 +250,69 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Future<void> editProfileData() async {
     if (widget.editProfile) {
-      final data = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid.uid)
-          .collection('userData')
-          .doc(uid.phoneNumber)
-          .get();
+      final data = (widget.firstProfile)
+          ? await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid.uid)
+              .collection('userData')
+              .doc(uid.phoneNumber)
+              .get()
+          : await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid.uid)
+              .collection('userData')
+              .doc(uid.phoneNumber)
+              .collection('other Profile')
+              .doc(widget.userId)
+              .get();
       users = Users.fromJson(data.data()!);
       nameController.text = users!.name;
       addressController.text = users!.address;
+      pinCodeController.text = users!.pinCode;
       emailController.text = users!.email;
       phoneNumberController.text = users!.phoneNumber!;
-      ageController.text = users!.age;
+      panCardController.text = users!.panCard;
+      relationController.text = users!.relation!;
       birthDateController.text = users!.birthDate;
-      image = users!.image;
+      url = users!.image;
       _isDeleteUser = users!.isDeleteUser;
       setState(() {});
-
-      print('users!.isDeleteUser --------- ${users!.isDeleteUser}');
     }
   }
 
   Future<void> submitEditProfileData() async {
     final user = Users(
-      id: currentUser!.uid,
+      id: (widget.firstProfile) ? currentUser!.uid : widget.userId!,
       name: nameController.text,
-      image: users!.image ?? url!,
+      image: (url != null) ? url! : null,
       address: addressController.text,
+      pinCode: pinCodeController.text,
       email: emailController.text,
-      age: ageController.text,
+      panCard: panCardController.text,
       birthDate: birthDateController.text,
-      phoneNumber: currentUser!.phoneNumber,
+      relation: relationController.text,
+      phoneNumber: phoneNumberController.text,
       isDeleteUser: _isDeleteUser,
     );
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid.uid)
-        .collection('userData')
-        .doc(uid.phoneNumber)
-        .update(
-          user.toJson(),
-        );
+    (widget.firstProfile)
+        ? await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid.uid)
+            .collection('userData')
+            .doc(uid.phoneNumber)
+            .update(
+              user.toJson(),
+            )
+        : await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid.uid)
+            .collection('userData')
+            .doc(uid.phoneNumber)
+            .collection('other Profile')
+            .doc(widget.userId)
+            .update(
+              user.toJson(),
+            );
     await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -300,6 +325,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   void initState() {
     editProfileData();
+    if (widget.firstProfile) {
+      phoneNumberController.text =
+          '${FirebaseAuth.instance.currentUser!.phoneNumber}';
+    }
     super.initState();
   }
 
@@ -332,46 +361,162 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: _showModalBottomSheet,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      // color: greenColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: (image != null)
-                            ? (widget.editProfile)
-                                ? NetworkImage(
-                                    users!.image!,
-                                  ) as ImageProvider
-                                : FileImage(
-                                    File(image!),
-                                  )
-                            : AssetImage(
-                                Assets.images.profilePicture.path,
+                Align(
+                  child: GestureDetector(
+                    onTap: _showModalBottomSheet,
+                    child: (url != null) ?
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: greenColor.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: url!,
+                        fit: BoxFit.fill,
+                        progressIndicatorBuilder: (context, url, progress) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                              color: greenColor,
+                            ),
+                          );
+                        },
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: greenColor.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
                               ),
+                            ),
+                          );
+                        },
+                      ),
+                    ) : Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage(
+                            Assets.images.profilePicture.path,
+                          ),
+                        ),
                       ),
                     ),
+                    // (widget.editProfile)
+                    //     ? Container(
+                    //         height: 100,
+                    //         width: 100,
+                    //         decoration: BoxDecoration(
+                    //           color: greenColor.withOpacity(0.1),
+                    //           shape: BoxShape.circle,
+                    //           image: DecorationImage(
+                    //             fit: BoxFit.cover,
+                    //             image: (url != null)
+                    //                 ? NetworkImage(
+                    //                     url!,
+                    //                   )
+                    //                 : AssetImage(
+                    //                     Assets.images.profilePicture.path,
+                    //                   ) as ImageProvider,
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Container(
+                    //         height: 100,
+                    //         width: 100,
+                    //         decoration: BoxDecoration(
+                    //           color: greenColor.withOpacity(0.1),
+                    //           shape: BoxShape.circle,
+                    //           image: DecorationImage(
+                    //             fit: BoxFit.cover,
+                    //             image: (image != null)
+                    //                 ? FileImage(
+                    //                     File(image!),
+                    //                   )
+                    //                 : AssetImage(
+                    //                     Assets.images.profilePicture.path,
+                    //                   ) as ImageProvider,
+                    //           ),
+                    //         ),
+                    //       ),
                   ),
                 ),
                 const SizedBox(
                   height: 40,
                 ),
-                CommonTextFormField(
+                TitleText(
+                  text: localization.personalInformation,
+                ),
+                AddProfileTextFormField(
                   controller: nameController,
+                  labelText: '${localization.name}*',
                   textInputAction: TextInputAction.next,
-                  text: localization.name,
                 ),
-                CommonTextFormField(
-                  controller: addressController,
+                GestureDetector(
+                  onTap: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime.now(),
+                    ).then((pickedDate) {
+                      final formattedDate =
+                          DateFormat('dd-MM-yyyy').format(pickedDate!);
+                      setState(() {
+                        birthDateController.text = formattedDate;
+                      });
+                    });
+                  },
+                  child: AbsorbPointer(
+                    child: AddProfileTextFormField(
+                      controller: birthDateController,
+                      showCursor: false,
+                      validator: (v) {
+                        return (v!.isEmpty)
+                            ? localization.pleaseSelectBirthDate
+                            : null;
+                      },
+                      textInputAction: TextInputAction.none,
+                      keyboardType: TextInputType.none,
+                      labelText: '${localization.dateOfBirth}*',
+                      icon: Icons.calendar_month_outlined,
+                    ),
+                  ),
+                ),
+                AddProfileTextFormField(
+                  keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
-                  text: localization.address,
+                  controller: panCardController,
+                  labelText: '${localization.panCardNumber}*',
+                  validator: (value) {
+                    if (value!.length < 10) {
+                      return localization.pleaseEnterValidPanCardNumber;
+                    } else if (value.length != 10) {
+                      return localization.panCardNumberShouldBeOf10Digit;
+                    }
+                  },
                 ),
-                CommonTextFormField(
+                if (!widget.firstProfile)
+                  AddProfileTextFormField(
+                    controller: relationController,
+                    textInputAction: TextInputAction.next,
+                    labelText: localization.relation,
+                  )
+                else
+                  const SizedBox(),
+                TitleText(
+                  text: localization.contactInformation,
+                ),
+                AddProfileTextFormField(
                   controller: emailController,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -382,101 +527,89 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         !value.contains('.com')) {
                       return localization.invalidEmail;
                     }
-                    return null;
                   },
-                  text: localization.email,
+                  labelText: '${localization.email}*',
                 ),
-                CommonTextFormField(
-                  textInputAction: TextInputAction.next,
-                  text: '${FirebaseAuth.instance.currentUser!.phoneNumber}',
-                  readOnly: true,
-                  enabled: false,
-                  showCursor: false,
-                  onSaved: (value) {
-                    phoneNumberController.text =
-                        '${FirebaseAuth.instance.currentUser!.phoneNumber}';
-                    return null;
-                  },
-                ),
-                if (!widget.firstProfile)
-                  CommonTextFormField(
-                    controller: relationController,
+                if (widget.firstProfile)
+                  AddProfileTextFormField(
+                    controller: phoneNumberController,
                     textInputAction: TextInputAction.next,
-                    text: localization.relation,
+                    labelText: localization.phoneNumber,
+                    readOnly: true,
+                    enabled: false,
+                    showCursor: false,
                   )
                 else
-                  const SizedBox(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CommonTextFormField(
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.done,
-                        controller: ageController,
-                        text: localization.age,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime.now(),
-                          ).then((pickedDate) {
-                            final formattedDate =
-                                DateFormat('dd-MM-yyyy').format(pickedDate!);
-                            setState(() {
-                              birthDateController.text = formattedDate;
-                              // users!.birthDate = formattedDate;
-                            });
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: CommonTextFormField(
-                            controller: birthDateController,
-                            showCursor: false,
-                            validator: (v) {
-                              return (v!.isEmpty)
-                                  ? localization.pleaseSelectBirthDate
-                                  : null;
-                            },
-                            textInputAction: TextInputAction.none,
-                            keyboardType: TextInputType.none,
-                            text: localization.birthDate,
-                            icon: Icons.date_range_outlined,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  AddProfileTextFormField(
+                    textInputAction: TextInputAction.next,
+                    labelText: '${localization.phoneNumber}*',
+                    keyboardType: TextInputType.number,
+                    controller: phoneNumberController,
+                    validator: (value) {
+                      if (value!.length < 10) {
+                        return localization.pleaseEnterValidPhoneNumber;
+                      } else if (value.length != 10) {
+                        return localization.phoneNumberShouldBeOf10Digit;
+                      }
+                    },
+                  ),
+                TitleText(
+                  text: localization.address,
+                ),
+                AddProfileTextFormField(
+                  controller: addressController,
+                  textInputAction: TextInputAction.next,
+                  labelText: '${localization.address}*',
+                ),
+                AddProfileTextFormField(
+                  controller: pinCodeController,
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.number,
+                  labelText: '${localization.pinCode}*',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return localization.pleaseEnterPinCodeNumber;
+                    } else if (value.length < 6) {
+                      return localization.pleaseEnterValidPinCodeNumber;
+                    } else if (value.length > 6) {
+                      return localization.pinCodeNumberShouldBeOf6Digit;
+                    }
+                  },
                 ),
                 if (widget.editProfile)
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _isDeleteUser = true;
-                          users!.isDeleteUser = true;
+                  TextButton(
+                    onPressed: () async {
+                      deleteUserAccount(
+                        context: context,
+                        imageUrl: users!.image,
+                        userEmail: users!.email,
+                        userName: users!.name,
+                        firstProfile: widget.firstProfile,
+                        userId: widget.userId,
+                      );
+                      if (widget.firstProfile) {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid.uid)
+                            .collection('userData')
+                            .doc(uid.phoneNumber)
+                            .update({
+                          'isDeleteUser': true,
                         });
-                        // submitEditProfileData();
-                        deleteUserAccount(
-                          context: context,
-                          imageUrl: users!.image!,
-                          userEmail: users!.email,
-                          userName: users!.name,
-                        );
-                      },
-
-                      child: Text(
-                        localization.deleteMyAccount,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
+                      }
+                    },
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.transparent,
+                      ),
+                    ),
+                    child: Text(
+                      (widget.firstProfile)
+                          ? localization.deleteMyAccount
+                          : localization.deleteThisAccount,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
@@ -500,6 +633,123 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class AddProfileTextFormField extends StatelessWidget {
+  const AddProfileTextFormField({
+    required this.labelText,
+    required this.textInputAction,
+    this.controller,
+    this.showCursor = true,
+    this.enabled = true,
+    this.readOnly = false,
+    super.key,
+    this.onChanged,
+    this.onSaved,
+    this.validator,
+    this.icon,
+    this.keyboardType,
+  });
+
+  final TextEditingController? controller;
+  final String labelText;
+  final TextInputAction textInputAction;
+  final IconData? icon;
+  final bool showCursor;
+  final bool enabled;
+  final bool readOnly;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? onChanged;
+  final String? Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: whiteColor,
+          // boxShadow: [
+          //   BoxShadow(
+          //     blurRadius: 2,
+          //     offset: const Offset(0,1),
+          //     color: blackColor.withOpacity(0.25),
+          //   ),
+          // ],
+          border: Border.all(
+            width: 0.2,
+            color: cloudyGreyColor.withOpacity(0.25),
+          ),
+        ),
+        child: TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          showCursor: showCursor,
+          readOnly: readOnly,
+          textInputAction: textInputAction,
+          onChanged: onChanged,
+          onSaved: onSaved,
+          enabled: enabled,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: validator ??
+              ((readOnly == false)
+                  ? (value) {
+                      if (value == null || value.isEmpty) {
+                        return localization.pleaseEnterSomeText;
+                      } else {
+                        return null; // Validation passed
+                      }
+                    }
+                  : null),
+          decoration: InputDecoration(
+            label: Text(
+              labelText,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+                color: blackColor.withOpacity(0.6),
+              ),
+            ),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: cloudyGreyColor.withOpacity(0.4),
+                width: 0.4,
+              ),
+            ),
+            suffixIcon: icon != null ? Icon(icon) : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TitleText extends StatelessWidget {
+  TitleText({
+    required this.text,
+    super.key,
+  });
+
+  String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: blackColor.withOpacity(0.4),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:soul_comfort/app_const/colors.dart';
 import 'package:soul_comfort/gen/assets.gen.dart';
@@ -13,7 +14,7 @@ class CommonProfileView extends StatelessWidget {
     super.key,
   });
 
-  final String userImage;
+  final String? userImage;
   final String userName;
   final String userEmail;
   final double height;
@@ -26,26 +27,59 @@ class CommonProfileView extends StatelessWidget {
       children: [
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 20, 20),
-              child: Container(
-                height: height,
-                width: width,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: (userImage.contains('jpg'))
-                        ? NetworkImage(
-                            userImage,
-                          )
-                        : AssetImage(
-                            Assets.images.profilePicture.path,
-                          ) as ImageProvider,
+            if (userImage != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 20, 20),
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: greenColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: userImage!,
+                    fit: BoxFit.fill,
+                    progressIndicatorBuilder: (context, url, progress) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: progress.progress,
+                          color: greenColor,
+                        ),
+                      );
+                    },
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: greenColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: imageProvider,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 20, 20),
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        Assets.images.profilePicture.path,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,11 +105,11 @@ class CommonProfileView extends StatelessWidget {
                 ],
               ),
             ),
-            widget ?? const SizedBox()  ,
+            widget ?? const SizedBox(),
           ],
         ),
         const Divider(
-          color: blackColor,
+          // color: blackColor,
           thickness: 1,
         ),
       ],

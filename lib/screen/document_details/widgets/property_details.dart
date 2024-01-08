@@ -22,10 +22,10 @@ class PropertyDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
-                .collection('document')
-                .doc(id)
-                .collection('Property')
-                .snapshots(),
+            .collection('document')
+            .doc(id)
+            .collection('Property')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -34,19 +34,27 @@ class PropertyDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data?.docs[index].data();
                 final property = Property.fromJson(data!);
-
                 return Column(
                   children: [
                     DetailsText(
                       name: localization.propertyName,
-                      value: property.propertyName!,
+                      value: property.propertyName,
                     ),
                     DetailsText(
                       name: localization.propertyAddress,
-                      value: property.propertyAddress!,
+                      value: property.propertyAddress,
+                    ),
+                    DetailsText(
+                      name: localization.pinCode,
+                      value: property.pinCode,
+                    ),
+                    DetailsText(
+                      name: localization.percentageOfOwnership,
+                      value: property.percentageOfOwnership,
                     ),
                     if (property.notes!.isNotEmpty)
                       DetailsText(

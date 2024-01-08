@@ -53,7 +53,7 @@ class AddDocumentDetails extends StatefulWidget {
 
   final String id;
   final String titleName;
-  final String image;
+  final String? image;
   final String name;
   final String email;
   final int index;
@@ -75,9 +75,12 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
 
   TextEditingController propertyNameController = TextEditingController();
   TextEditingController propertyAddressController = TextEditingController();
+  TextEditingController percentageOfOwnerController = TextEditingController();
+  TextEditingController pinCodeController = TextEditingController();
 
   TextEditingController epfController = TextEditingController();
   TextEditingController ppfController = TextEditingController();
+  TextEditingController uanController = TextEditingController();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
@@ -112,7 +115,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
   String id = DateTime.now().millisecondsSinceEpoch.toString();
   Users? users;
   bool _isLoading = false;
-  bool _isLoadingImage = false;
 
   Future<void> _pickImageFromCamera() async {
     final pickedImageFile = await picker
@@ -121,7 +123,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     )
         .whenComplete(() {
       setState(() {
-        _isLoadingImage = true;
       });
     });
 
@@ -129,9 +130,6 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     dataImage = pickedImageFile.path.split('/').last;
     Navigator.pop(context);
     listImage.add(images!);
-    setState(() {
-      _isLoadingImage = false;
-    });
     final ref = FirebaseStorage.instance
         .ref()
         .child('documentImage')
@@ -141,8 +139,9 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     await ref.putFile(images!).whenComplete(() {});
 
     url = await ref.getDownloadURL();
-
     listImageUrl.add('$url');
+    setState(() {
+    });
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -151,21 +150,11 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       maxHeight: 400,
       preferredCameraDevice: CameraDevice.front,
       source: ImageSource.gallery,
-    )
-        .whenComplete(() {
-      setState(() {
-        _isLoadingImage = true;
-      });
-    });
-
+    );
     images = File(pickedImageFile!.path);
     dataImage = pickedImageFile.path.split('/').last;
     listImage.add(images!);
     Navigator.pop(context);
-
-    setState(() {
-      _isLoadingImage = false;
-    });
 
     final ref = FirebaseStorage.instance
         .ref()
@@ -178,21 +167,20 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     url = await ref.getDownloadURL();
 
     listImageUrl.add('$url');
+    setState(() {
+    });
   }
 
   Future<void> _pickedPdfFile() async {
     final pickedFile = await FilePicker.platform.pickFiles().whenComplete(() {
       setState(() {
-        _isLoadingImage = true;
       });
     });
     images = File(pickedFile!.files.single.path!);
     dataImage = pickedFile.files.single.path!.split('/').last;
     Navigator.pop(context);
     listImage.add(images!);
-    setState(() {
-      _isLoadingImage = false;
-    });
+
     final ref = FirebaseStorage.instance
         .ref()
         .child('documentImage')
@@ -205,6 +193,8 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
 
     url = await ref.getDownloadURL();
     listImageUrl.add('$url');
+    setState(() {
+    });
   }
 
   Future<void> _showModalBottomSheet() {
@@ -296,6 +286,8 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       images: listImageUrl.isEmpty ? [] : listImageUrl,
       propertyAddress: propertyAddressController.text,
       propertyName: propertyNameController.text,
+      percentageOfOwnership: percentageOfOwnerController.text,
+      pinCode: pinCodeController.text,
       notes: notesController.text,
     );
     return propertyDetails.toJson();
@@ -328,6 +320,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       id: id,
       ppfName: ppfController.text,
       epfName: epfController.text,
+      uanName: uanController.text,
       notes: notesController.text,
       images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
@@ -339,6 +332,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
       id: id,
       lockerName: lockerNameController.text,
       lockerAddress: lockerAddressController.text,
+      pinCode: pinCodeController.text,
       notes: notesController.text,
       images: listImageUrl.isEmpty ? [] : listImageUrl,
     );
@@ -415,8 +409,8 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
         .get()
         .then((value) {
       if (value.data() != null) {
-        final collectionList = ((value.data()!['collectionList']) as List<String>)
-            .map((e) => e)
+        final collectionList = ((value.data()!['collectionList']) as List)
+            .map((e) => e.toString())
             .toList();
         setState(() {
           collectionNameList = collectionList;
@@ -474,6 +468,8 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     AddPropertyDetails(
       propertyNameController: propertyNameController,
       propertyAddressController: propertyAddressController,
+      pinCodeController: pinCodeController,
+      percentageOfOwnerController: percentageOfOwnerController,
     ),
     AddTradingAccountDetails(
       stockController: stockController,
@@ -486,10 +482,12 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
     AddProvidentFundsDetails(
       epfController: epfController,
       ppfController: ppfController,
+      uanController: uanController,
     ),
     AddLockerDetails(
       lockerNameController: lockerNameController,
       lockerAddressController: lockerAddressController,
+      pinCodeController: pinCodeController,
     ),
     AddInsuranceDetails(
       insuranceNameController: insuranceNameController,
@@ -516,6 +514,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    print('${widget.titleName} ${localization.details} ${localization.add}');
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -592,7 +591,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                 child: Wrap(
                   children: [
                     ...List.generate(
-                      listImage.length,
+                      listImageUrl.length,
                       (index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
@@ -623,7 +622,7 @@ class _AddDocumentDetailsState extends State<AddDocumentDetails> {
                               );
                             },
                             child: AddDetailsImage(
-                              image: listImage[index],
+                              image: listImageUrl[index],
                               onTap: () {
                                 setState(() {
                                   listImageUrl.remove(listImageUrl[index]);

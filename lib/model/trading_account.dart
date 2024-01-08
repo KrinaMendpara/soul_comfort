@@ -1,8 +1,8 @@
 class TradingAccount {
   TradingAccount({
-    this.id,
-    this.stock,
-    this.mutualFunds,
+    required this.id,
+    required this.stock,
+    required this.mutualFunds,
     this.images,
     this.notes,
   });
@@ -17,9 +17,9 @@ class TradingAccount {
             : List<String>.from(json['images'] as List),
       );
 
-  String? id;
-  String? stock;
-  String? mutualFunds;
+  String id;
+  String stock;
+  String mutualFunds;
   List<String>? images;
   String? notes;
 

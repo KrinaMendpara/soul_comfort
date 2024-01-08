@@ -22,12 +22,50 @@ class _SplashScreenState extends State<SplashScreen> {
     timer();
     super.initState();
   }
+  // Future<void> checkConnection() async{
+  //   final connectivityResult = await Connectivity().checkConnectivity();
+  //   if (connectivityResult == ConnectivityResult.mobile) {
+  //
+  //     print('ConnectivityResult.mobile');
+  //   }
+  //   else if (connectivityResult == ConnectivityResult.wifi) {
+  //     print('ConnectivityResult.wifi');
+  //     AlertDialog(
+  //       actions: [
+  //         Image.asset('assets/icons/wifi_offline.png',
+  //           height : 40,
+  //           width : 40,
+  //           fit: BoxFit.fill,
+  //         ),
+  //         const Text('Check Your Internet Connection'),
+  //         const Text('Check Your Internet Connection'),
+  //       ],
+  //     );
+  //   }
+  //   else if(connectivityResult == ConnectivityResult.ethernet) {
+  //     print('ConnectivityResult.ethernet');
+  //   }
+  //   else if(connectivityResult == ConnectivityResult.none) {
+  //     print('ConnectivityResult.none');
+  //     // AlertDialog(
+  //     //   actions: [
+  //     //     Image.asset('assets/icons/wifi_offline.png',
+  //     //       height : 40,
+  //     //       width : 40,
+  //     //       fit: BoxFit.fill,
+  //     //     ),
+  //     //     const Text('Check Your Internet Connection'),
+  //     //     const Text('Check Your Internet Connection'),
+  //     //   ],
+  //     // );
+  //   }
+  // }
 
   void timer() {
     Timer(const Duration(seconds: 2), () async {
       final currentUser = FirebaseAuth.instance.currentUser;
-      // await context.read<AuthProviders>().checkDeleteUser().then((value) async {
-      //   if(value == false) {
+      await context.read<AuthProviders>().checkDeleteUser().then((value) async {
+        if(value == false) {
           if(currentUser != null) {
             await Navigator.pushAndRemoveUntil(
               context,
@@ -45,17 +83,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   (route) => false,
             );
           }
-        // }
-        // else {
-        //   await Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (ctx) => const LogInScreen(),
-        //     ),
-        //         (route) => false,
-        //   );
-        // }
-      // });
+        }
+      });
     });
   }
 

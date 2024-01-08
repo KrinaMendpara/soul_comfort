@@ -18,7 +18,7 @@ class DocumentListScreen extends StatefulWidget {
   });
 
   final String id;
-  final String image;
+  final String? image;
   final String name;
   final String email;
 
@@ -127,7 +127,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             // width: 150,
                             padding: const EdgeInsets.only(top: 15),
                             decoration: BoxDecoration(
-                              color: cloudyGreyColor,
+                              color: vistaWhiteColor,
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
@@ -144,7 +144,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => DocumentDetails(
                                       id: widget.id,
-                                      image: widget.image,
+                                      image: widget.image ,
                                       name: widget.name,
                                       email: widget.email,
                                       title: getTranslation('${data[index]}'),
@@ -157,14 +157,16 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Image.asset(
-                                    getImage(getTranslation('${data[index]!}')),
-                                    height: 90,
-                                    width: 90,
-                                    fit: BoxFit.fill,
+                                  Expanded(
+                                    child: Image.asset(
+                                      getImage(getTranslation('${data[index]!}')),
+                                      height: 90,
+                                      width: 90,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
+                                    padding: const EdgeInsets.only(top: 10,bottom: 10),
                                     child: Text(
                                       getTranslation('${data[index]!}'),
                                       overflow: TextOverflow.ellipsis,

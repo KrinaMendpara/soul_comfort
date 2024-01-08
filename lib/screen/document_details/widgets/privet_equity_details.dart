@@ -33,6 +33,7 @@ class PrivetEquityDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final privetEquity = PrivetEquity.fromJson(data);
@@ -40,7 +41,7 @@ class PrivetEquityDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.privetEquityName,
-                      value: privetEquity.equityName!,
+                      value: privetEquity.equityName,
                     ),
                     DetailsText(
                       name: localization.other,

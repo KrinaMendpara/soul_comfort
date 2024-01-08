@@ -141,8 +141,9 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
             ),
             CommonButton(
-              onTap: () {
-                verifyOTP(context, otpCode);
+              onTap: () async {
+                await verifyOTP(context, otpCode);
+                // await SmsAutoFill().listenForCode();
               },
               widget: authProvider.isVerification
                   ? const Indicator(

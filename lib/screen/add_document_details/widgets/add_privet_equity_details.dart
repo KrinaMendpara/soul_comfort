@@ -20,7 +20,7 @@ class AddPrivetEquityDetails extends StatelessWidget {
         CommonTextFormField(
           controller: equityNameController,
           textInputAction: TextInputAction.next,
-          text: localization.equityName,
+          text: '${localization.equityName}*',
           onChanged: (value) {
             equityNameController.text = value!;
           },

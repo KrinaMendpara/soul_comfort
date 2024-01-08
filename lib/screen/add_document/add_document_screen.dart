@@ -16,7 +16,7 @@ class AddDocumentScreen extends StatefulWidget {
   });
 
   final String id;
-  final String image;
+  final String? image;
   final String name;
   final String email;
 
@@ -103,36 +103,38 @@ class _AddDocumentScreenState extends State<AddDocumentScreen> {
                         ),
                       );
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: greenColor.withOpacity(0.1),
-                          child: Image.asset(
-                            Assets.icons.document.path,
-                            height: 16,
-                            width: 14,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              documentList[index],
+                    child: AbsorbPointer(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: greenColor.withOpacity(0.1),
+                            child: Image.asset(
+                              Assets.icons.document.path,
+                              height: 16,
+                              width: 14,
+                              fit: BoxFit.fill,
                             ),
                           ),
-                        ),
-                        CircleAvatar(
-                          backgroundColor: greenColor.withOpacity(0.1),
-                          child: const Center(
-                            child: Icon(
-                                Icons.add,
-                                color: greenColor,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                documentList[index],
                               ),
+                            ),
                           ),
-                        ),
-                      ],
+                          CircleAvatar(
+                            backgroundColor: greenColor.withOpacity(0.1),
+                            child: const Center(
+                              child: Icon(
+                                  Icons.add,
+                                  color: greenColor,
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

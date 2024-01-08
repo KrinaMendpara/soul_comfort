@@ -23,6 +23,59 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final langList = <String>['English', 'ગુજરાતી', 'हिंदी'];
 
+  // Future<void> checkConnection() async {
+  //   final connectivityResult = await Connectivity().checkConnectivity();
+  //   if (connectivityResult == ConnectivityResult.mobile) {
+  //     print('ConnectivityResult.mobile');
+  //   } else if (connectivityResult == ConnectivityResult.wifi) {
+  //     print('ConnectivityResult.wifi');
+  //   } else if (connectivityResult == ConnectivityResult.ethernet) {
+  //     print('ConnectivityResult.ethernet');
+  //   } else if (connectivityResult == ConnectivityResult.none) {
+  //     print('ConnectivityResult.none');
+  //     return showDialog(
+  //         context: context,
+  //         barrierColor: blackColor.withOpacity(0.5),
+  //         builder: (context) {
+  //           return AlertDialog(
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //             contentPadding: const EdgeInsets.all(20),
+  //             alignment: Alignment.center,
+  //             content: const Text(
+  //               'No Internet Connection',
+  //             ),
+  //             actions: [
+  //               Align(
+  //                 child: Image.asset(
+  //                   'assets/icons/wifi_offline.png',
+  //                   height: 80,
+  //                   width: 80,
+  //                   fit: BoxFit.fill,
+  //                 ),
+  //               ),
+  //               const Padding(
+  //                 padding: EdgeInsets.only(top: 20, bottom: 10),
+  //                 child: Align(
+  //                   child: Text(
+  //                     'Please Check Your Internet Connection',
+  //                     style: TextStyle(color: Colors.grey),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           );
+  //         });
+  //   }
+  // }
+
+  @override
+  void initState() {
+    // checkConnection();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
@@ -44,10 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, provider, child) {
                 return DropdownButton(
                   icon: const Icon(
-                    Icons.language,
+                    Icons.translate,
                     color: blackColor,
                   ),
-                  iconSize: 25,
+                  iconSize: 20,
                   underline: Container(
                     width: 0,
                   ),
@@ -67,8 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onChanged: (String? v) async {
                     await provider.changeLanguage(v!);
                     await provider.setLanguages(v);
-                    // provider.locale;
-                    // provider.selectedLanguages;
                   },
                 );
               },
@@ -91,12 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting &&
                     snapshot.error == snapshot.hasError) {
                   return const CircularProgressIndicator();
-                }
-                // else if(snapshot.error == snapshot.hasError){
-                //   return const CircularProgressIndicator();
-                // }
-                else if (snapshot.hasData) {
-                  final data = snapshot.data!.data();
+                } else if (snapshot.hasData) {
+                  final data = snapshot.data?.data();
                   final userModel = Users.fromJson(data!);
                   return GestureDetector(
                     onTap: () {
@@ -105,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(
                           builder: (context) => DocumentListScreen(
                             id: userModel.id,
-                            image: userModel.image!,
+                            image: userModel.image,
                             name: userModel.name,
                             email: userModel.email,
                           ),
@@ -115,14 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: CommonProfileView(
                       height: 100,
                       width: 100,
-                      userImage: userModel.image!,
+                      userImage: userModel.image,
                       userName: userModel.name,
                       userEmail: userModel.email,
                       widget: IconButton(
                         icon: const Icon(
                           Icons.edit,
+                          color: cloudyGreyColor,
+                          size: 22,
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -170,18 +219,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => DocumentListScreen(
                                     id: userModel.id,
-                                    image: userModel.image!,
+                                    image: userModel.image,
                                     name: userModel.name,
                                     email: userModel.email,
                                   ),
                                 ),
                               );
                             },
-                            child: AbsorbPointer(
-                              child: CommonProfileView(
-                                userImage: userModel.image!,
-                                userName: userModel.name,
-                                userEmail: userModel.email,
+                            child: CommonProfileView(
+                              userImage: userModel.image,
+                              userName: userModel.name,
+                              userEmail: userModel.email,
+                              widget: IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: cloudyGreyColor,
+                                ),
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegistrationScreen(
+                                        editProfile: true,
+                                        firstProfile: false,
+                                        userId: userModel.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),

@@ -11,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AuthProviders extends ChangeNotifier {
   String? _uid;
-
   String? get uid => _uid;
 
   String? _userPhoneNumber;
@@ -29,7 +28,6 @@ class AuthProviders extends ChangeNotifier {
   bool isVerification = false;
   bool isUserDelete = false;
 
-  int? forceResendingToken;
 
   void isLoading({required bool value}) {
     isLogin = value;
@@ -46,7 +44,6 @@ class AuthProviders extends ChangeNotifier {
     PhoneController controller,
   ) async {
     final phoneNumber = controller.value!.international;
-    print('------------------ $phoneNumber');
     if (!(controller.value?.isValid() ?? false)) {
       return;
     }
@@ -56,9 +53,7 @@ class AuthProviders extends ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
-        forceResendingToken: forceResendingToken,
         codeSent: (verificationID, resendingToken) {
-          forceResendingToken = resendingToken;
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -128,12 +123,12 @@ class AuthProviders extends ChangeNotifier {
       if (user != null) {
         _uid = user.uid;
         _userPhoneNumber = user.phoneNumber;
-        _userEmail = _firebaseAuth.currentUser!.email;
-        // await getUserEmail() .then((value) {
-        //   _userEmail = value;
-        // });
+
         await checkDeleteUser().then((value) async {
           if (value == true) {
+            await getUserEmail() .then((value) {
+              _userEmail = value;
+            });
             verificationLoader(value: false);
             await checkDeleteUser().then((value) async {
               await deleteUserDialog(context);
@@ -245,8 +240,6 @@ class AuthProviders extends ChangeNotifier {
                 final email = Uri.encodeComponent('mendparakrina@mail.com');
                 final subject = Uri.encodeComponent('Contact to support');
                 final body = Uri.encodeComponent('Uid : $uid, \n Email : $userEmail');
-                print(subject);
-                print(email);
                 final mail = Uri.parse('mailto:$email?subject=$subject&body=$body');
                 launchUrl(mail);
               },

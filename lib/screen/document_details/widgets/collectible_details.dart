@@ -18,15 +18,14 @@ class CollectibleDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
 
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
-                .collection('document')
-                .doc(id)
-                .collection('Collectible')
-                .snapshots(),
+            .collection('document')
+            .doc(id)
+            .collection('Collectible')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -35,10 +34,10 @@ class CollectibleDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final collectible = Collectible.fromJson(data);
-
                 return Column(
                   children: [
                     DetailsText(

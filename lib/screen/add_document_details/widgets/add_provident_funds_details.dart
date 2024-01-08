@@ -3,15 +3,22 @@ import 'package:soul_comfort/common_widgets/textformfield.dart';
 import 'package:soul_comfort/generated/l10n.dart';
 
 class AddProvidentFundsDetails extends StatelessWidget {
-  const AddProvidentFundsDetails({required this.epfController, required this.ppfController, super.key});
+  const AddProvidentFundsDetails({
+    required this.epfController,
+    required this.ppfController,
+    required this.uanController,
+    super.key,
+  });
+
   final TextEditingController epfController;
+  final TextEditingController uanController;
   final TextEditingController ppfController;
 
   @override
   Widget build(BuildContext context) {
-    final localization  = AppLocalizations.of(context);
+    final localization = AppLocalizations.of(context);
 
-    return  Column(
+    return Column(
       children: [
         CommonTextFormField(
           controller: epfController,
@@ -27,6 +34,14 @@ class AddProvidentFundsDetails extends StatelessWidget {
           text: localization.pPF,
           onChanged: (value) {
             ppfController.text = value!;
+          },
+        ),
+        CommonTextFormField(
+          controller: uanController,
+          textInputAction: TextInputAction.next,
+          text: localization.uAN,
+          onChanged: (value) {
+            uanController.text = value!;
           },
         ),
       ],

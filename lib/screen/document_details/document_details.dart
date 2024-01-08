@@ -25,7 +25,7 @@ class DocumentDetails extends StatelessWidget {
   });
 
   final String id;
-  final String image;
+  final String? image;
   final String name;
   final String email;
   final String title;
@@ -55,6 +55,7 @@ class DocumentDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    print('$title ${localization.details}');
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(

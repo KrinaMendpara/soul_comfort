@@ -20,7 +20,7 @@ class AddOtherAssetsDetails extends StatelessWidget {
         CommonTextFormField(
           controller: nameController,
           textInputAction: TextInputAction.next,
-          text: localization.name,
+          text: '${localization.name}*',
           onChanged: (value) {
             nameController.text = value!;
           },
@@ -28,7 +28,7 @@ class AddOtherAssetsDetails extends StatelessWidget {
         CommonTextFormField(
           controller: detailsController,
           textInputAction: TextInputAction.next,
-          text: localization.details,
+          text: '${localization.name}*',
           onChanged: (value) {
             detailsController.text = value!;
           },

@@ -34,6 +34,7 @@ class P2PLandingDetails extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index].data();
                 final p2pLanding = P2PLanding.fromJson(data);
@@ -41,7 +42,7 @@ class P2PLandingDetails extends StatelessWidget {
                   children: [
                     DetailsText(
                       name: localization.name,
-                      value: p2pLanding.p2PLanding!,
+                      value: p2pLanding.p2PLanding,
                     ),
                     DetailsText(
                       name: localization.other,

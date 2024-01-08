@@ -47,13 +47,6 @@ class _LogInScreenState extends State<LogInScreen> {
                 // height: 3,
               ),
             ),
-            Text(
-              localization.toSoulComfort,
-              style: const TextStyle(
-                fontSize: 16,
-                // height: 3,
-              ),
-            ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               child: PhoneFormField(

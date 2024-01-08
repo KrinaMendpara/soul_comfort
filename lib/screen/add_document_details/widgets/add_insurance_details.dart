@@ -16,7 +16,7 @@ class AddInsuranceDetails extends StatelessWidget {
         CommonTextFormField(
           controller: insuranceNameController,
           textInputAction: TextInputAction.next,
-          text: localization.insuranceName,
+          text: '${localization.insuranceName}*',
           onChanged: (value) {
             insuranceNameController.text = value!;
           },
@@ -24,7 +24,7 @@ class AddInsuranceDetails extends StatelessWidget {
         CommonTextFormField(
           controller: otherController,
           textInputAction: TextInputAction.next,
-          text: localization.other,
+          text: '${localization.other}*',
           onChanged: (value) {
             otherController.text = value!;
           },

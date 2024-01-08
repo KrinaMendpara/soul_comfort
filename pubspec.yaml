@@ -35,8 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl: any
   pinput: ^3.0.1
-  sms_autofill: ^2.3.0
-  phone_form_field: ^8.1.0
+  phone_form_field: ^8.1.1
 
   #local storage
   shared_preferences: ^2.2.2
@@ -51,8 +50,8 @@ dependencies:
 
   #image/pdf viewer
   flutter_cached_pdfview: ^0.4.2
-  cached_network_image: ^3.3.0
-  syncfusion_flutter_pdfviewer: ^24.1.41
+  cached_network_image: ^3.3.1
+  syncfusion_flutter_pdfviewer: ^24.1.43
 
   #firebase
   firebase_auth: ^4.15.3

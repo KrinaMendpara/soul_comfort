@@ -1,7 +1,7 @@
 class P2PLanding {
   P2PLanding({
-    this.id,
-    this.p2PLanding,
+    required this.id,
+    required this.p2PLanding,
     this.others,
     this.images,
     this.notes,
@@ -17,8 +17,8 @@ class P2PLanding {
             : List<String>.from(json['images'] as List),
       );
 
-  String? id;
-  String? p2PLanding;
+  String id;
+  String p2PLanding;
   String? others;
   List<String>? images;
   String? notes;
